@@ -39,8 +39,9 @@ import java.util.Map;
 
 public class CaptureActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict";
+    private static String ipaddress="192.168.10.141";
+    private static final String ROOT_URL = "http://"+ipaddress+":8080/api/image/predict";
+//    private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; for android emulator
     private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST =1 ;
     private Bitmap bitmap;
