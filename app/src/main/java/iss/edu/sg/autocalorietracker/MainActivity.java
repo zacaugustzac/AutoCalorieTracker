@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -31,12 +33,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private BarChart barChart;
     private YAxis leftAxis;
     private YAxis rightAxis;
     private boolean hasAxesNames = true;
     private LimitLine ll1;
+    private ImageView menuIcon;
+    private ImageView photoIcon;
 
     //variables for menu
     private DrawerLayout drawerLayout;
@@ -51,21 +55,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
         navigationView =findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.toolbar);
+        menuIcon = findViewById(R.id.menu);
+        photoIcon = findViewById(R.id.photo);
+        photoIcon.setOnClickListener(this);
+
 
         //tool bar
         setSupportActionBar(toolbar);
 
         //Navigation Drawer Menu
-        navigationView.bringToFront();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
 
-        navigationView.setCheckedItem(R.id.nav_home);
-
-
+        navigationDrawer();
 
 
         barChart = findViewById(R.id.barChart);
@@ -110,6 +114,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void navigationDrawer() {
+        //Navigation Drawer
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
+
+        menuIcon.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if(drawerLayout.isDrawerVisible(GravityCompat.START)){
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+    }
+
     //set the drawer
     @Override
     public void onBackPressed(){
@@ -149,6 +172,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @Override
+    public void onClick(View v) {
+            Intent intent= new Intent(this,CaptureActivity.class);
+            startActivity(intent);
+
+    }
     private ArrayList<BarEntry> calories() {
         ArrayList<BarEntry> calories = new ArrayList<>();
         calories.add(new BarEntry(1, 450));
