@@ -1,9 +1,14 @@
 package iss.edu.sg.autocalorietracker;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,6 +35,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +46,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CaptureActivity extends AppCompatActivity implements View.OnClickListener {
+public class CaptureActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static String ipaddress="192.168.10.141";
     private static final String ROOT_URL = "http://"+ipaddress+":8080/api/image/predict";
-//    private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; for android emulator
+    //private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; //for android emulator
     private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST =1 ;
     private Bitmap bitmap;
@@ -54,10 +61,13 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     TextView cal;
     ProgressBar progress;
     private Button historyview;
-    private ImageButton homebut;
+    private ImageView homebut;
     private ImageButton camera;
     private int cameracode=5;
     private String imageabs;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
 
 
@@ -65,16 +75,17 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
+        drawerLayout =findViewById(R.id.drawer_layout);
+        drawerLayout =findViewById(R.id.drawer_layout);
+        navigationView =findViewById(R.id.nav_view);
 
         //initializing views
         imageView =  findViewById(R.id.imageView);
         textView =  findViewById(R.id.textview);
         name=findViewById(R.id.foodname);
         cal=findViewById(R.id.foodcalorie);
+        homebut=findViewById(R.id.menu);
         historyview=findViewById(R.id.buttonhistory);
-        historyview.setOnClickListener(this);
-        homebut=findViewById(R.id.home);
-        homebut.setOnClickListener(this);
         historyview.setOnClickListener(this);
         camera=findViewById(R.id.cameralink);
         camera.setOnClickListener(this);
@@ -98,23 +109,76 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 } else {
                     Log.e("Else", "Else");
-                    if(textView.getText().equals("File Selected")){
-                        progress.setVisibility(View.VISIBLE);
-                        Thread th= new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                uploadBitmap(bitmap);
-                            }
-                        });
-                        th.start();
-
-                    }else{
                         showFileChooser();
-                    }
-
                 }
 
 
+            }
+        });
+
+        //tool bar
+        setSupportActionBar(toolbar);
+
+        //Navigation Drawer Menu
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationDrawer();
+
+    }
+    @Override
+    public void onBackPressed(){
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+        switch (menuItem.getItemId()){
+            case R.id.nav_home:
+                Intent intent0 = new Intent(this, MainActivity.class);
+                startActivity(intent0);
+                break;
+            case R.id.nav_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_plan:
+                Intent intent1 = new Intent(this, PlanActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.nav_reminders:
+                Intent intent2 = new Intent(this, RemindersActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.nav_share:
+                Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_rate:
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void navigationDrawer() {
+        //Navigation Drawer
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(CaptureActivity.this);
+        navigationView.setCheckedItem(R.id.nav_home);
+
+        homebut.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(drawerLayout.isDrawerVisible(GravityCompat.START)){
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
             }
         });
     }
@@ -125,6 +189,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -138,9 +203,9 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
             if (filePath != null) {
                 try {
 
-                    textView.setText("File Selected");
                     Log.d("filePath", String.valueOf(filePath));
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), picUri);
+                    textView.setText("File Selected");
                     Thread th= new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -165,7 +230,15 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                 bitmap= BitmapFactory.decodeFile(imageabs);
                 bitmap=getResizedBitmap(bitmap, 500);
                 imageView.setImageBitmap(bitmap);
+                progress.setVisibility(View.VISIBLE);
                 textView.setText("File Selected");
+                Thread th= new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadBitmap(bitmap);
+                    }
+                });
+                th.start();
             }
         }
 
@@ -207,8 +280,6 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         }
         return null;
     }
-
-
 
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -274,11 +345,8 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         if(v==camera){
             takePhoto();
         }else if(v==historyview){
-            Intent intent= new Intent(this,HistoryActivity.class);
-            startActivity(intent);
-        }else if(v==homebut){
-            Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
+//            Intent intent= new Intent(this,historyActivity.class);
+//            startActivity(intent);
         }
     }
 }
