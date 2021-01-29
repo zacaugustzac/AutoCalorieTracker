@@ -61,8 +61,6 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
