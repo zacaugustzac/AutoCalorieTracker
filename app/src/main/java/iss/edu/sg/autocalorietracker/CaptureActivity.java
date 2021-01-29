@@ -144,6 +144,8 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent0);
                 break;
             case R.id.nav_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_plan:
                 Intent intent1 = new Intent(this, PlanActivity.class);
