@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         leftAxis = barChart.getAxisLeft();
         rightAxis = barChart.getAxisRight();
 
-        xAxis.setDrawAxisLine(false);
         rightAxis.setEnabled(false);
         barChart.setDrawGridBackground(false);
         xAxis.setDrawGridLines(false);
