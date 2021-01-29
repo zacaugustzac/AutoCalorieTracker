@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -337,6 +338,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         //adding the request to volley
+        volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(0,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
 
@@ -345,8 +347,8 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         if(v==camera){
             takePhoto();
         }else if(v==historyview){
-//            Intent intent= new Intent(this,historyActivity.class);
-//            startActivity(intent);
+            Intent intent= new Intent(this,HistoryActivity.class);
+            startActivity(intent);
         }
     }
 }
