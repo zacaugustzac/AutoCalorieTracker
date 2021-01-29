@@ -13,12 +13,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,11 +52,15 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     TextView textView;
     TextView name;
     TextView cal;
+    ProgressBar progress;
     private Button historyview;
     private ImageButton homebut;
     private ImageButton camera;
     private int cameracode=5;
     private String imageabs;
+
+
+
 
 
     @Override
@@ -74,6 +80,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         historyview.setOnClickListener(this);
         camera=findViewById(R.id.cameralink);
         camera.setOnClickListener(this);
+        progress=findViewById(R.id.wait);
 
         //adding click listener to button
         findViewById(R.id.buttonUploadImage).setOnClickListener(new View.OnClickListener() {
@@ -94,7 +101,14 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     Log.e("Else", "Else");
                     if(textView.getText().equals("File Selected")){
-                        uploadBitmap(bitmap);
+                        progress.setVisibility(View.VISIBLE);
+                        Thread th= new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                uploadBitmap(bitmap);
+                            }
+                        });
+                        th.start();
 
                     }else{
                         showFileChooser();
@@ -129,7 +143,14 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                     textView.setText("File Selected");
                     Log.d("filePath", String.valueOf(filePath));
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), picUri);
-                    uploadBitmap(bitmap);
+                    Thread th= new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadBitmap(bitmap);
+                        }
+                    });
+                    th.start();
+                    progress.setVisibility(View.VISIBLE);
                     imageView.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -144,12 +165,29 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         }else if(requestCode==cameracode){
             if(resultCode==RESULT_OK){
                 bitmap= BitmapFactory.decodeFile(imageabs);
+                bitmap=getResizedBitmap(bitmap, 500);
                 imageView.setImageBitmap(bitmap);
                 textView.setText("File Selected");
             }
         }
 
     }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
     public void takePhoto() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -190,9 +228,19 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                             JSONObject obj = new JSONObject(new String(response.data));
                             String fname=obj.getString("name");
                             double fcal=obj.getDouble("calorie");
-                            name.setText(fname);
-                            cal.setText(fcal+" cal");
-                            textView.setText("File Submitted");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    name.setText(fname);
+                                    cal.setText(fcal+" cal");
+                                    textView.setText("File Submitted");
+                                    progress.setVisibility(View.INVISIBLE);
+                                }
+                            });
+
+
+
+
 
                             //Toast.makeText(getApplicationContext(), name+" "+cal, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
