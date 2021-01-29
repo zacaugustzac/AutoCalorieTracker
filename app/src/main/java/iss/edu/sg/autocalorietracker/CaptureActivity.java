@@ -274,8 +274,8 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         if(v==camera){
             takePhoto();
         }else if(v==historyview){
-//            Intent intent= new Intent(this,historyActivity.class);
-//            startActivity(intent);
+            Intent intent= new Intent(this,HistoryActivity.class);
+            startActivity(intent);
         }else if(v==homebut){
             Intent intent= new Intent(this,MainActivity.class);
             startActivity(intent);

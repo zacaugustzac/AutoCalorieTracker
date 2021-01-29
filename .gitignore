@@ -16,3 +16,5 @@ local.properties
 /.idea
 /.idea/markdown-navigator.xml
 /.idea/markdown-navigator-enh.xml
+/app/src/main/res/layout/activity_history.xml
+/app/src/main/java/iss/edu/sg/autocalorietracker/HistoryActivity.java

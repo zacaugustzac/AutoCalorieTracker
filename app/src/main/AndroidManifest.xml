@@ -15,8 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoCalorieTracker"
         android:usesCleartextTraffic="true">
-        android:theme="@style/Theme.AutoCalorieTracker">
-        <activity android:name=".RemindersActivity"></activity>
+        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".RemindersActivity" />
         <activity android:name=".PlanActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MainActivity">
@@ -37,9 +37,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CaptureActivity">
-
-        </activity>
+        <activity android:name=".CaptureActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

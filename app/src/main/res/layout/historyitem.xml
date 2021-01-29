@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+
+        android:layout_width="380dp"
+        android:layout_height="150dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        android:background="@color/background">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="150dp"
+            android:layout_height="130dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/egg" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="83dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/img"
+            android:fontFamily="@font/archivo_narrow_bold"
+            android:text="Egg(boild)"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text2"
+            android:layout_marginStart="141dp"
+            android:layout_marginLeft="141dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/img"
+            android:layout_toRightOf="@+id/img"
+            android:fontFamily="@font/archivo_narrow_bold"
+            android:text="78 kcal"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView16"
+            android:layout_alignParentEnd="false"
+            android:layout_marginStart="178dp"
+            android:layout_marginLeft="178dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="-2dp"
+            android:layout_toEndOf="@+id/img"
+            android:layout_toRightOf="@+id/img"
+            android:fontFamily="@font/archivo_narrow_bold"
+            android:text="7am"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/textView17"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/delete" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/textView17"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/imageView4"
+            app:srcCompat="@drawable/share_icon" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/textView17"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="11dp"
+            android:layout_toStartOf="@+id/imageView2"
+            app:srcCompat="@drawable/edit" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
