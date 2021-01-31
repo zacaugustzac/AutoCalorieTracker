@@ -6,12 +6,13 @@ import java.util.List;
 
 public class Item {
 
-    private Integer image;
+//    private Integer image;
+    private String image;
     private String name;
     private String calorie;
     private String timestamp;
 
-    public Item(Integer image, String name, String calorie, String timestamp) {
+    public Item(String image, String name, String calorie, String timestamp) {
         this.image = image;
         this.name = name;
         this.calorie = calorie;
@@ -20,7 +21,7 @@ public class Item {
 
 
 
-    public Integer getImage() {
+    public String getImage() {
         return image;
     }
 
