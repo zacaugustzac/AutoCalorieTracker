@@ -33,6 +33,17 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.ComboLineColumnChartData;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.ComboLineColumnChartView;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private BarChart barChart;
     private YAxis leftAxis;
@@ -46,11 +57,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private ComboLineColumnChartView chart;
+    private ComboLineColumnChartData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        drawComboChart();
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
@@ -72,43 +87,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationDrawer();
 
 
-        barChart = findViewById(R.id.barChart);
-
-        //set x value
-        String[] days = new String[]{"", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(days));
-
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1);
-        xAxis.setGranularityEnabled(true);
-
-        //set value of each column
-        BarDataSet barDataSet = new BarDataSet(calories(), "Calories");
-        barDataSet.setColors(getResources().getColor(R.color.green));
-        barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setDrawValues(false);
-
-
-        BarData barData = new BarData(barDataSet);
-
-        barChart.setDragEnabled(true);
-        barChart.setFitBars(true);
-        barChart.setData(barData);
-        barChart.animateY(1000);
-        barChart.setDrawBorders(false);
-
-        Description description = new Description();
-        description.setEnabled(false);
-        barChart.setDescription(description);
-
-        leftAxis = barChart.getAxisLeft();
-        rightAxis = barChart.getAxisRight();
-
-        rightAxis.setEnabled(false);
-        barChart.setDrawGridBackground(false);
-        xAxis.setDrawGridLines(false);
-        leftAxis.setDrawGridLines(false);
+//        barChart = findViewById(R.id.barChart);
+//
+//        //set x value
+//        String[] days = new String[]{"", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+//        XAxis xAxis = barChart.getXAxis();
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(days));
+//
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setGranularity(1);
+//        xAxis.setGranularityEnabled(true);
+//
+//        //set value of each column
+//        BarDataSet barDataSet = new BarDataSet(calories(), "Calories");
+//        barDataSet.setColors(getResources().getColor(R.color.green));
+//        barDataSet.setValueTextColor(Color.BLACK);
+//        barDataSet.setDrawValues(false);
+//
+//
+//        BarData barData = new BarData(barDataSet);
+//
+//        barChart.setDragEnabled(true);
+//        barChart.setFitBars(true);
+//        barChart.setData(barData);
+//        barChart.animateY(1000);
+//        barChart.setDrawBorders(false);
+//
+//        Description description = new Description();
+//        description.setEnabled(false);
+//        barChart.setDescription(description);
+//
+//        leftAxis = barChart.getAxisLeft();
+//        rightAxis = barChart.getAxisRight();
+//
+//        rightAxis.setEnabled(false);
+//        barChart.setDrawGridBackground(false);
+//        xAxis.setDrawGridLines(false);
+//        leftAxis.setDrawGridLines(false);
 
 
     }
@@ -177,16 +192,83 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
     }
-    private ArrayList<BarEntry> calories() {
-        ArrayList<BarEntry> calories = new ArrayList<>();
-        calories.add(new BarEntry(1, 450));
-        calories.add(new BarEntry(2, 650));
-        calories.add(new BarEntry(3, 560));
-        calories.add(new BarEntry(4, 400));
-        calories.add(new BarEntry(5, 750));
-        calories.add(new BarEntry(6, 650));
-        calories.add(new BarEntry(7, 450));
-        return calories;
+//    private ArrayList<BarEntry> calories() {
+//        ArrayList<BarEntry> calories = new ArrayList<>();
+//        calories.add(new BarEntry(1, 450));
+//        calories.add(new BarEntry(2, 650));
+//        calories.add(new BarEntry(3, 560));
+//        calories.add(new BarEntry(4, 400));
+//        calories.add(new BarEntry(5, 750));
+//        calories.add(new BarEntry(6, 650));
+//        calories.add(new BarEntry(7, 450));
+//        return calories;
+//    }
+
+    public void drawComboChart() {
+        chart = findViewById(R.id.chart);
+
+        generateData();
+    }
+
+
+    private void generateData() {
+        // Chart looks the best when line data and column data have similar maximum viewports.
+        data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
+        chart.setComboLineColumnChartData(data);
+        Axis axisX = new Axis();
+        Axis axisY = new Axis().setHasLines(true);
+        data.setAxisXBottom(axisX);
+        data.setAxisYLeft(axisY);
+    }
+
+    private LineChartData generateLineData() {
+
+        List<Line> lines = new ArrayList<>();
+        for (int i = 0; i < 1; ++i) {
+            List<PointValue> values = new ArrayList<>();
+            for (int j = 0; j < 7; ++j) {
+                values.add(new PointValue(j, 1200));
+            }
+            Line line = new Line(values);
+            line.setColor(ChartUtils.COLORS[i]);
+            line.setCubic(false);
+            line.setHasLabels(false);
+            line.setHasLines(true);
+            line.setHasPoints(false);
+            lines.add(line);
+        }
+
+
+        List<PointValue> values = new ArrayList<>();
+        for (int k = 0; k < 7; ++k) {
+            values.add(new PointValue(k, 1400));
+        }
+        Line line = new Line(values);
+        line.setColor(ChartUtils.COLORS[1]);
+        line.setCubic(false);
+        line.setHasLabels(false);
+        line.setHasLines(true);
+        line.setHasPoints(false);
+        lines.add(line);
+        LineChartData lineChartData = new LineChartData(lines);
+
+        return lineChartData;
+
+    }
+
+    private ColumnChartData generateColumnData() {
+        int numColumns = 7;
+        List<Column> columns = new ArrayList<>();
+        List<SubcolumnValue> values;
+        float calorieHistory[] = {1400,1800,1300,1000,1400,1300,1200};
+        for (int i = 0; i < numColumns; ++i) {
+            values = new ArrayList<>();
+            values.add(new SubcolumnValue(calorieHistory[i], ChartUtils.COLOR_GREEN));
+            columns.add(new Column(values));
+        }
+
+        ColumnChartData columnChartData = new ColumnChartData(columns);
+        return columnChartData;
     }
 
 }

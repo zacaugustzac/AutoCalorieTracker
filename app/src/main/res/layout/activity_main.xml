@@ -67,15 +67,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChart"
+            <lecho.lib.hellocharts.view.ComboLineColumnChartView
+                android:id="@+id/chart"
                 android:layout_width="400dp"
                 android:layout_height="400dp"
-                android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                />
 
             <TextView
                 android:id="@+id/evaluate"
@@ -86,7 +86,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/barChart"
+                app:layout_constraintTop_toBottomOf="@+id/chart"
                 app:layout_constraintVertical_bias="0.312" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
