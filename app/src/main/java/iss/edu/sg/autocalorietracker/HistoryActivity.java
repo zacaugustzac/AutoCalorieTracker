@@ -10,14 +10,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.TimeZone;
+import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 
 public class HistoryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,11 +58,14 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private Button share1;
     private Button editText;
     private Button remove;
+    private TextView datenow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        datenow=findViewById(R.id.editDate);
+        datenow.setText(""+LocalDate.now());
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
         navigationView =findViewById(R.id.nav_view);
@@ -60,8 +79,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         navigationDrawer();
 
 //        mRecyclerView = findViewById(R.id.GridView);
-        creatItemList();
-        buildRecyclerView();
+        //TODO need to be replaced by session instead of hardcoding
+        System.out.println("it is calling create item list");
+        creatItemList(LocalDate.now(),"ZAC@GMAIL.COM");
+//        buildRecyclerView();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
 //        name = new ArrayList<>();
 //        images = new ArrayList<>();
@@ -185,10 +209,61 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
 
-    public void creatItemList(){
+    public void creatItemList(LocalDate date,String email){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/history/getTodayHistory?date="+date+"&email="+email;
+        System.out.println("url="+url);
         mItemList=new ArrayList<>();
-        mItemList.add(new Item(R.drawable.egg,"Egg(boild)","78 kcal","7am"));
-        mItemList.add(new Item(R.drawable.egg,"Egg(boild)","78 kcal","7am"));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response is: "+ response.toString());
+                        JSONArray result= null;
+
+                        try {
+                            result = new JSONArray(response.toString());
+
+                            for(int x=0;x<result.length();x++){
+                               JSONObject ans=result.getJSONObject(x);
+//                               String name=ans.getJSONObject("food").getString("name");
+//                               double calorie=ans.getJSONObject("food").getDouble("calorie");
+                                String name=ans.getString("foodName");
+                                double calorie=ans.getDouble("calorie");
+                               Long time=ans.getLong("epochTime");
+                                Date date = new Date(time);
+                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+                                String formatted = format.format(date);
+
+
+                              mItemList.add(new Item(ans.getString("url"),name,""+calorie,formatted));
+                              buildRecyclerView();
+
+                            }
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(HistoryActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+        queue.add(stringRequest);
+
+
+
+//        mItemList=new ArrayList<>();
+        //mItemList.add(new Item("http://localhost:8080/api/image/ZAC@GMAIL.COM_1612085120335.png","Egg(boild)","78 kcal","7am"));
+        //mItemList.add(new Item(R.drawable.egg,"Egg(boild)","78 kcal","7am"));
     }
 
 

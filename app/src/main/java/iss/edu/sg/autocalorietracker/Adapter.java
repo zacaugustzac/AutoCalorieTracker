@@ -2,6 +2,8 @@ package iss.edu.sg.autocalorietracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,9 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +103,20 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Item currentItem = mItemList.get(position);
-        holder.image.setImageResource(currentItem.getImage());
+        URL url = null;
+        try {
+            String imageurl=currentItem.getImage();
+            imageurl=imageurl.replace("localhost:8080","10.0.2.2:8080");
+            url = new URL(imageurl);
+            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            holder.image.setImageBitmap(bmp);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //holder.image.setImageResource(currentItem.getImage());
         holder.name.setText(currentItem.getName());
         holder.calorie.setText(currentItem.getCalorie());
         holder.timestamp.setText(currentItem.getTimestamp());
