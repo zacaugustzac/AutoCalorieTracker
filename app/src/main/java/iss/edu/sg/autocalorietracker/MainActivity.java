@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.ComboLineColumnChartData;
@@ -215,8 +216,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Chart looks the best when line data and column data have similar maximum viewports.
         data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
         chart.setComboLineColumnChartData(data);
-        Axis axisX = new Axis();
-        Axis axisY = new Axis().setHasLines(true);
+
+        //axis
+        List<AxisValue> axisValuesForX = new ArrayList<>();
+        List<AxisValue> axisValuesForY = new ArrayList<>();
+        AxisValue tempAxisValue;
+
+        String[] daysOfTheWeek = {"M","T","W","T","F","S","S"};
+        for (int i = 0; i <= 6; i += 1){
+            tempAxisValue = new AxisValue(i);
+            tempAxisValue.setLabel(daysOfTheWeek[i]);
+            axisValuesForX.add(tempAxisValue);
+        }
+
+        for (int i = 0; i <= 2000; i += 200){
+            tempAxisValue = new AxisValue(i);
+            tempAxisValue.setLabel(i+"");
+            axisValuesForY.add(tempAxisValue);
+        }
+
+        Axis axisX = new Axis(axisValuesForX);
+        Axis axisY = new Axis(axisValuesForY);
         data.setAxisXBottom(axisX);
         data.setAxisYLeft(axisY);
     }
