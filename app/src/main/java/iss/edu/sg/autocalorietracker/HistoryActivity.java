@@ -226,8 +226,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
                             for(int x=0;x<result.length();x++){
                                JSONObject ans=result.getJSONObject(x);
-                               String name=ans.getJSONObject("food").getString("name");
-                               double calorie=ans.getJSONObject("food").getDouble("calorie");
+//                               String name=ans.getJSONObject("food").getString("name");
+//                               double calorie=ans.getJSONObject("food").getDouble("calorie");
+                                String name=ans.getString("foodName");
+                                double calorie=ans.getDouble("calorie");
                                Long time=ans.getLong("epochTime");
                                 Date date = new Date(time);
                                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
