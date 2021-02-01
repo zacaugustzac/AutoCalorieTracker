@@ -5,8 +5,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -97,13 +99,12 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         mRecyclerView = findViewById(R.id.GridView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-
         Adapter mAdapter = new Adapter(mItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        mLayoutManager2 = new LinearLayoutManager(this);
         mRecyclerView2 = findViewById(R.id.GridView2);
+        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
         mRecyclerView2.setHasFixedSize(true);
         Adapter2 mAdapter2 = new Adapter2(mItemList2);
         mRecyclerView2.setLayoutManager(mLayoutManager2);
