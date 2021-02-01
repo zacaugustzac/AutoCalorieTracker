@@ -29,6 +29,8 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.time.LocalDateTime;
 import java.util.TimeZone;
 import java.time.LocalDate;
 import java.text.DateFormat;
@@ -40,6 +42,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Item> mItemList;
+    //TODO later need to based session registration
+    private String useremail="ZAC@GMAIL.COM";
     //test  test
 
 //
@@ -59,6 +63,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private Button editText;
     private Button remove;
     private TextView datenow;
+    private TextView totalcalorie;
+    private TextView remcalorie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         datenow=findViewById(R.id.editDate);
         datenow.setText(""+LocalDate.now());
+        totalcalorie=findViewById(R.id.textView16);
+        remcalorie=findViewById(R.id.textView18);
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
         navigationView =findViewById(R.id.nav_view);
@@ -78,44 +86,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         navigationDrawer();
 
-//        mRecyclerView = findViewById(R.id.GridView);
-        //TODO need to be replaced by session instead of hardcoding
         System.out.println("it is calling create item list");
-        creatItemList(LocalDate.now(),"ZAC@GMAIL.COM");
-//        buildRecyclerView();
+        retrieveItemList(LocalDate.now(),useremail);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-//        name = new ArrayList<>();
-//        images = new ArrayList<>();
-//        calorie = new ArrayList<>();
-//        timestamp = new ArrayList<>();
-//        addImages();
-//        addNames();
-//        addCalories();
-//        addTimestamps();
 
-//        Adapter adapter = new Adapter(images, name, calorie, timestamp, this);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
-//        itemList.setLayoutManager(gridLayoutManager);
-//        itemList.setAdapter(adapter);
-//        adapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
-//            @Override
-//            public void onShareClick(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onEditClick(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onDeleteClick(int position) {
-//                removeItem(position);
-//            }
-//        });
     }
 
     public void buildRecyclerView() {
@@ -139,14 +116,15 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
             @Override
             public void onDeleteClick(int position) {
                 mItemList.remove(position);
+                Item a= mItemList.get(position);
+                Long id=a.getId();
+                deleteImage(id,position);
                 mAdapter.notifyItemRemoved(position);
+
+
             }
         });
     }
-
-
-
-
 
     //set the drawer
     @Override
@@ -208,8 +186,67 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
+    public void deleteImage(Long id,int position){
+        //TODO in the java part later
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/history/deleteImage/"+id;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mItemList.remove(position);
+                        Toast.makeText(HistoryActivity.this,"removed successfully",Toast.LENGTH_SHORT).show();
+                    }
 
-    public void creatItemList(LocalDate date,String email){
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(HistoryActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void showRecommendation(double remainder){
+        //TODO in the java server part later
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/plan/getSuggestion?remainder="+remainder;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray result= null;
+                        try {
+                            result = new JSONArray(response.toString());
+
+                            for(int x=0;x<result.length();x++){
+                                JSONObject ans=result.getJSONObject(x);
+                                String name=ans.getString("foodName");
+                                String url= ans.getString("url");
+                                double calorie=ans.getDouble("calorie");
+                                //TODO attach all the data to be shown in the recommended
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(HistoryActivity.this,"retrieved successfully",Toast.LENGTH_SHORT).show();
+                    }
+
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(HistoryActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+
+    public void retrieveItemList(LocalDate date,String email){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url="http://10.0.2.2:8080/history/getTodayHistory?date="+date+"&email="+email;
         System.out.println("url="+url);
@@ -220,7 +257,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                     public void onResponse(String response) {
                         System.out.println("Response is: "+ response.toString());
                         JSONArray result= null;
-
+                        double sum=0;
+                        double threshold=0;
                         try {
                             result = new JSONArray(response.toString());
 
@@ -229,25 +267,27 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 //                               String name=ans.getJSONObject("food").getString("name");
 //                               double calorie=ans.getJSONObject("food").getDouble("calorie");
                                 String name=ans.getString("foodName");
+                                Long id= ans.getLong("id");
                                 double calorie=ans.getDouble("calorie");
+                                sum+=calorie;
+                                threshold=ans.getJSONObject("dailyHistory").getJSONObject("user").getDouble("recommendedCalories");
                                Long time=ans.getLong("epochTime");
                                 Date date = new Date(time);
                                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
-
-
-                              mItemList.add(new Item(ans.getString("url"),name,""+calorie,formatted));
+                              mItemList.add(new Item(id,ans.getString("url"),name,""+calorie,formatted));
                               buildRecyclerView();
 
                             }
-
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                        totalcalorie.setText(""+sum);
+                        double remainder=threshold-sum;
+                        remcalorie.setText(remainder+" Kcal left for today");
+                        showRecommendation(remainder);
+                        //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }
                 },new Response.ErrorListener() {
             @Override
@@ -259,36 +299,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         });
         queue.add(stringRequest);
 
-
-
-//        mItemList=new ArrayList<>();
-        //mItemList.add(new Item("http://localhost:8080/api/image/ZAC@GMAIL.COM_1612085120335.png","Egg(boild)","78 kcal","7am"));
-        //mItemList.add(new Item(R.drawable.egg,"Egg(boild)","78 kcal","7am"));
     }
 
-
-//    private void addImages() {
-//        images.add(R.drawable.egg);
-//        images.add(R.drawable.egg);
-//        images.add(R.drawable.egg);
-//    }
-//
-//    private void addNames() {
-//        name.add("Egg(boild)");
-//        name.add("Egg(boild)");
-//        name.add("Egg(boild)");
-//    }
-//
-//    private void addCalories() {
-//        calorie.add("78 kcal");
-//        calorie.add("78 kcal");
-//        calorie.add("78 kcal");
-//    }
-//
-//    private void addTimestamps() {
-//        timestamp.add("7am");
-//        timestamp.add("7am");
-//        timestamp.add("7am");
-//    }
 
 }

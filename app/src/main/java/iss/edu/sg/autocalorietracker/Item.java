@@ -7,12 +7,14 @@ import java.util.List;
 public class Item {
 
 //    private Integer image;
+    private Long id;
     private String image;
     private String name;
     private String calorie;
     private String timestamp;
 
-    public Item(String image, String name, String calorie, String timestamp) {
+    public Item(Long id,String image, String name, String calorie, String timestamp) {
+        this.id=id;
         this.image = image;
         this.name = name;
         this.calorie = calorie;
@@ -20,6 +22,7 @@ public class Item {
     }
 
 
+    public Long getId(){return id;}
 
     public String getImage() {
         return image;
