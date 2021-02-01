@@ -40,19 +40,14 @@ import java.util.ArrayList;
 
 public class HistoryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView2;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Item> mItemList;
     //TODO later need to based session registration
-    private String useremail="ZAC@GMAIL.COM";
-    //test  test
+    private String useremail = "ZAC@GMAIL.COM";
 
-//
-//    private List<Integer> images;
-//    private List<String> name;
-//    private List<String> calorie;
-//    private List<String> timestamp;
 
-    private Button share,edit,delete;
+    private Button share, edit, delete;
 
     //variables for menu
     private DrawerLayout drawerLayout;
@@ -65,29 +60,30 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private TextView datenow;
     private TextView totalcalorie;
     private TextView remcalorie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        datenow=findViewById(R.id.editDate);
-        datenow.setText(""+LocalDate.now());
-        totalcalorie=findViewById(R.id.textView16);
-        remcalorie=findViewById(R.id.textView18);
+        datenow = findViewById(R.id.editDate);
+        datenow.setText("" + LocalDate.now());
+        totalcalorie = findViewById(R.id.textView16);
+        remcalorie = findViewById(R.id.textView18);
         //hooks
-        drawerLayout =findViewById(R.id.drawer_layout);
-        navigationView =findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
 
         //Navigation Drawer Menu
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationDrawer();
 
         System.out.println("it is calling create item list");
-        retrieveItemList(LocalDate.now(),useremail);
+        retrieveItemList(LocalDate.now(), useremail);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -102,6 +98,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         Adapter mAdapter = new Adapter(mItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView2 = findViewById(R.id.GridView2);
+        mRecyclerView2.setHasFixedSize(true);
+        Adapter2 mAdapter2 = new Adapter2(mItemList);
+        mRecyclerView2.setLayoutManager(mLayoutManager);
+        mRecyclerView2.setAdapter(mAdapter2);
+
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onShareClick(int position) {
@@ -115,12 +118,17 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
             @Override
             public void onDeleteClick(int position) {
-                mItemList.remove(position);
                 Item a= mItemList.get(position);
                 Long id=a.getId();
                 deleteImage(id,position);
+                mItemList.remove(position);
+                double currentsum=Double.valueOf(totalcalorie.getText().toString());
+                currentsum=currentsum-Double.valueOf(a.getCalorie());
+                totalcalorie.setText(""+currentsum);
+                double curremainder=Double.valueOf(remcalorie.getText().toString().split(" Kcal")[0]);
+                curremainder+=Double.valueOf(a.getCalorie().toString());
+                remcalorie.setText(curremainder+" Kcal left for today");
                 mAdapter.notifyItemRemoved(position);
-
 
             }
         });
@@ -128,10 +136,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
     //set the drawer
     @Override
-    public void onBackPressed(){
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -142,13 +150,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
 
-        menuIcon.setOnClickListener(new View.OnClickListener(){
+        menuIcon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(drawerLayout.isDrawerVisible(GravityCompat.START)){
+                if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
-                }else {
+                } else {
                     drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
@@ -158,8 +166,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
     //set the item in menu bar
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 Intent intent0 = new Intent(HistoryActivity.this, MainActivity.class);
                 startActivity(intent0);
@@ -177,7 +185,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 startActivity(intent3);
                 break;
             case R.id.nav_share:
-                Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_rate:
                 break;
@@ -186,19 +194,19 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
-    public void deleteImage(Long id,int position){
+    public void deleteImage(Long id, int position) {
         //TODO in the java part later
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/history/deleteImage/"+id;
+        String url = "http://10.0.2.2:8080/history/deleteImage/" + id;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         mItemList.remove(position);
-                        Toast.makeText(HistoryActivity.this,"removed successfully",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HistoryActivity.this, "removed successfully", Toast.LENGTH_SHORT).show();
                     }
 
-                },new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
@@ -208,23 +216,23 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         queue.add(stringRequest);
     }
 
-    public void showRecommendation(double remainder){
+    public void showRecommendation(double remainder) {
         //TODO in the java server part later
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/plan/getSuggestion?remainder="+remainder;
+        String url = "http://10.0.2.2:8080/plan/getSuggestion?remainder=" + remainder;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JSONArray result= null;
+                        JSONArray result = null;
                         try {
                             result = new JSONArray(response.toString());
 
-                            for(int x=0;x<result.length();x++){
-                                JSONObject ans=result.getJSONObject(x);
-                                String name=ans.getString("foodName");
-                                String url= ans.getString("url");
-                                double calorie=ans.getDouble("calorie");
+                            for (int x = 0; x < result.length(); x++) {
+                                JSONObject ans = result.getJSONObject(x);
+                                String name = ans.getString("foodName");
+                                String url = ans.getString("url");
+                                double calorie = ans.getDouble("calorie");
                                 //TODO attach all the data to be shown in the recommended
 
                             }
@@ -232,10 +240,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                             e.printStackTrace();
                         }
 
-                        Toast.makeText(HistoryActivity.this,"retrieved successfully",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HistoryActivity.this, "retrieved successfully", Toast.LENGTH_SHORT).show();
                     }
 
-                },new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
@@ -246,59 +254,57 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
 
-    public void retrieveItemList(LocalDate date,String email){
+    public void retrieveItemList(LocalDate date, String email) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/history/getTodayHistory?date="+date+"&email="+email;
-        System.out.println("url="+url);
-        mItemList=new ArrayList<>();
+        String url = "http://10.0.2.2:8080/history/getTodayHistory?date=" + date + "&email=" + email;
+        System.out.println("url=" + url);
+        mItemList = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("Response is: "+ response.toString());
-                        JSONArray result= null;
-                        double sum=0;
-                        double threshold=0;
+                        System.out.println("Response is: " + response.toString());
+                        JSONArray result = null;
+                        double sum = 0;
+                        double threshold = 0;
                         try {
                             result = new JSONArray(response.toString());
 
-                            for(int x=0;x<result.length();x++){
-                               JSONObject ans=result.getJSONObject(x);
+                            for (int x = 0; x < result.length(); x++) {
+                                JSONObject ans = result.getJSONObject(x);
 //                               String name=ans.getJSONObject("food").getString("name");
 //                               double calorie=ans.getJSONObject("food").getDouble("calorie");
-                                String name=ans.getString("foodName");
-                                Long id= ans.getLong("id");
-                                double calorie=ans.getDouble("calorie");
-                                sum+=calorie;
-                                threshold=ans.getJSONObject("dailyHistory").getJSONObject("user").getDouble("recommendedCalories");
-                               Long time=ans.getLong("epochTime");
+                                String name = ans.getString("foodName");
+                                Long id = ans.getLong("id");
+                                double calorie = ans.getDouble("calorie");
+                                sum += calorie;
+                                threshold = ans.getJSONObject("dailyHistory").getJSONObject("user").getDouble("recommendedCalories");
+                                Long time = ans.getLong("epochTime");
                                 Date date = new Date(time);
                                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
-                              mItemList.add(new Item(id,ans.getString("url"),name,""+calorie,formatted));
-                              buildRecyclerView();
+                                mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
+                                buildRecyclerView();
 
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        totalcalorie.setText(""+sum);
-                        double remainder=threshold-sum;
-                        remcalorie.setText(remainder+" Kcal left for today");
+                        totalcalorie.setText("" + sum);
+                        double remainder = threshold - sum;
+                        remcalorie.setText(remainder + " Kcal left for today");
                         showRecommendation(remainder);
                         //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }
-                },new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
                 Toast.makeText(HistoryActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
             }
-
         });
         queue.add(stringRequest);
-
     }
 
 

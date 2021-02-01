@@ -153,105 +153,20 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
-                    <TextView
-                        android:id="@+id/textView21"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="48dp"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="Egg(boild)"
-                        android:textSize="15dp"
+                        android:orientation="vertical"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView20">
 
-                    <TextView
-                        android:id="@+id/textView23"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="64dp"
-                        android:layout_marginTop="4dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="Egg(boild)"
-                        android:textSize="15dp"
-                        app:layout_constraintStart_toEndOf="@+id/textView21"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/GridView2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:numColumns="3"></androidx.recyclerview.widget.RecyclerView>
 
-                    <TextView
-                        android:id="@+id/textView25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="48dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="Egg(boild)"
-                        android:textSize="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-                    <TextView
-                        android:id="@+id/textView22"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="56dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="78 kcal"
-                        android:textSize="15dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
-
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="88dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="78 kcal"
-                        android:textSize="15dp"
-                        app:layout_constraintStart_toEndOf="@+id/textView22"
-                        app:layout_constraintTop_toBottomOf="@+id/textView23" />
-
-                    <TextView
-                        android:id="@+id/textView26"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="56dp"
-                        android:fontFamily="@font/archivo_narrow_bold"
-                        android:text="800 kcal"
-                        android:textSize="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView25" />
-
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="100dp"
-                        android:layout_height="70dp"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/egg"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView20" />
-
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="100dp"
-                        android:layout_height="70dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/egg"
-                        app:layout_constraintStart_toEndOf="@+id/imageView6"
-                        app:layout_constraintTop_toBottomOf="@+id/textView20" />
-
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="100dp"
-                        android:layout_height="70dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/egg"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.491"
-                        app:layout_constraintStart_toEndOf="@+id/imageView5"
-                        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
