@@ -47,11 +47,7 @@ import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-    private BarChart barChart;
-    private YAxis leftAxis;
-    private YAxis rightAxis;
-    private boolean hasAxesNames = true;
-    private LimitLine ll1;
+
     private ImageView menuIcon;
     private ImageView photoIcon;
 
@@ -82,52 +78,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         //Navigation Drawer Menu
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationDrawer();
-
-
-//        barChart = findViewById(R.id.barChart);
-//
-//        //set x value
-//        String[] days = new String[]{"", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-//        XAxis xAxis = barChart.getXAxis();
-//        xAxis.setValueFormatter(new IndexAxisValueFormatter(days));
-//
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setGranularity(1);
-//        xAxis.setGranularityEnabled(true);
-//
-//        //set value of each column
-//        BarDataSet barDataSet = new BarDataSet(calories(), "Calories");
-//        barDataSet.setColors(getResources().getColor(R.color.green));
-//        barDataSet.setValueTextColor(Color.BLACK);
-//        barDataSet.setDrawValues(false);
-//
-//
-//        BarData barData = new BarData(barDataSet);
-//
-//        barChart.setDragEnabled(true);
-//        barChart.setFitBars(true);
-//        barChart.setData(barData);
-//        barChart.animateY(1000);
-//        barChart.setDrawBorders(false);
-//
-//        Description description = new Description();
-//        description.setEnabled(false);
-//        barChart.setDescription(description);
-//
-//        leftAxis = barChart.getAxisLeft();
-//        rightAxis = barChart.getAxisRight();
-//
-//        rightAxis.setEnabled(false);
-//        barChart.setDrawGridBackground(false);
-//        xAxis.setDrawGridLines(false);
-//        leftAxis.setDrawGridLines(false);
-
 
     }
 
@@ -195,17 +150,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
     }
-//    private ArrayList<BarEntry> calories() {
-//        ArrayList<BarEntry> calories = new ArrayList<>();
-//        calories.add(new BarEntry(1, 450));
-//        calories.add(new BarEntry(2, 650));
-//        calories.add(new BarEntry(3, 560));
-//        calories.add(new BarEntry(4, 400));
-//        calories.add(new BarEntry(5, 750));
-//        calories.add(new BarEntry(6, 650));
-//        calories.add(new BarEntry(7, 450));
-//        return calories;
-//    }
 
     public void drawComboChart() {
         chart = findViewById(R.id.chart);
@@ -297,9 +241,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onValueDeselected() {
-            // TODO Auto-generated method stub
-
         }
+
         @Override
         public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
 //            Toast.makeText(MainActivity.this, "Selected column: " + value, Toast.LENGTH_SHORT).show();
@@ -309,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
-
         }
     }
 }
