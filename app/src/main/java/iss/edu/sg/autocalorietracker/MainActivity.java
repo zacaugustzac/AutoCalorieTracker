@@ -31,7 +31,10 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -57,12 +60,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ComboLineColumnChartView chart;
     private ComboLineColumnChartData data;
+    List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         drawComboChart();
 
@@ -148,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View v) {
             Intent intent= new Intent(this,CaptureActivity.class);
             startActivity(intent);
-
     }
 
     public void drawComboChart() {
@@ -189,11 +191,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private LineChartData generateLineData() {
 
+        //Average line
         List<Line> lines = new ArrayList<>();
+        int AverageCalories = (int)calorieHistory.stream().mapToInt(val->val).average().orElse(0.0);
         for (int i = 0; i < 1; ++i) {
             List<PointValue> values = new ArrayList<>();
             for (int j = 0; j < 7; ++j) {
-                values.add(new PointValue(j, 1200));
+                values.add(new PointValue(j, AverageCalories));
             }
             Line line = new Line(values);
             line.setColor(ChartUtils.COLORS[i]);
@@ -204,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             lines.add(line);
         }
 
-
+        //Recommended Line
         List<PointValue> values = new ArrayList<>();
         for (int k = 0; k < 7; ++k) {
             values.add(new PointValue(k, 1400));
@@ -226,10 +230,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int numColumns = 7;
         List<Column> columns = new ArrayList<>();
         List<SubcolumnValue> values;
-        float calorieHistory[] = {1400,1800,1300,1000,1400,1300,1200};
+
         for (int i = 0; i < numColumns; ++i) {
             values = new ArrayList<>();
-            values.add(new SubcolumnValue(calorieHistory[i], ChartUtils.COLOR_GREEN));
+            values.add(new SubcolumnValue(calorieHistory.get(i), ChartUtils.COLOR_GREEN));
             columns.add(new Column(values));
         }
 
