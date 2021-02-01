@@ -44,6 +44,7 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ComboLineColumnChartView;
+import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private BarChart barChart;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         drawComboChart();
 
@@ -207,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void drawComboChart() {
         chart = findViewById(R.id.chart);
-
+        chart.setOnValueTouchListener(new ValueTouchListener());
         generateData();
     }
 
@@ -291,4 +293,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return columnChartData;
     }
 
+    private class ValueTouchListener implements ComboLineColumnChartOnValueSelectListener {
+
+        @Override
+        public void onValueDeselected() {
+            // TODO Auto-generated method stub
+
+        }
+        @Override
+        public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
+//            Toast.makeText(MainActivity.this, "Selected column: " + value, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onPointValueSelected(int lineIndex, int pointIndex, PointValue value) {
+
+        }
+    }
 }
