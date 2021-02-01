@@ -42,7 +42,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager2;
     private ArrayList<Item> mItemList;
+    private ArrayList<Item> mItemList2;
     //TODO later need to based session registration
     private String useremail = "ZAC@GMAIL.COM";
 
@@ -95,14 +97,16 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         mRecyclerView = findViewById(R.id.GridView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
+
         Adapter mAdapter = new Adapter(mItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        mLayoutManager2 = new LinearLayoutManager(this);
         mRecyclerView2 = findViewById(R.id.GridView2);
         mRecyclerView2.setHasFixedSize(true);
-        Adapter2 mAdapter2 = new Adapter2(mItemList);
-        mRecyclerView2.setLayoutManager(mLayoutManager);
+        Adapter2 mAdapter2 = new Adapter2(mItemList2);
+        mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setAdapter(mAdapter2);
 
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
@@ -202,7 +206,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        mItemList.remove(position);
                         Toast.makeText(HistoryActivity.this, "removed successfully", Toast.LENGTH_SHORT).show();
                     }
 
@@ -217,23 +220,25 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
     public void showRecommendation(double remainder) {
-        //TODO in the java server part later
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/plan/getSuggestion?remainder=" + remainder;
+        String url = "http://10.0.2.2:8080/api/food/getSuggestion?remainder=" + remainder;
+        System.out.println("url=" + url);
+        mItemList2 = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         JSONArray result = null;
                         try {
-                            result = new JSONArray(response.toString());
+                            result = new JSONArray(response);
 
                             for (int x = 0; x < result.length(); x++) {
                                 JSONObject ans = result.getJSONObject(x);
                                 String name = ans.getString("foodName");
                                 String url = ans.getString("url");
                                 double calorie = ans.getDouble("calorie");
-                                //TODO attach all the data to be shown in the recommended
+                                mItemList2.add(new Item(url, name, "" + calorie));
+                                buildRecyclerView();
 
                             }
                         } catch (JSONException e) {
@@ -268,7 +273,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         double sum = 0;
                         double threshold = 0;
                         try {
-                            result = new JSONArray(response.toString());
+                            result = new JSONArray(response);
 
                             for (int x = 0; x < result.length(); x++) {
                                 JSONObject ans = result.getJSONObject(x);
@@ -285,7 +290,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
                                 mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
-                                buildRecyclerView();
+                                //buildRecyclerView();
 
                             }
                         } catch (JSONException e) {

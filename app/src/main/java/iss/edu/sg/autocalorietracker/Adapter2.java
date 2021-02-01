@@ -17,10 +17,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
-    private ArrayList<Item> mItemList;
+    private ArrayList<Item> mItemList2;
 
     public Adapter2(ArrayList<Item> exampleList) {
-        mItemList = exampleList;
+        mItemList2 = exampleList;
     }
 
 
@@ -47,7 +47,7 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Item currentItem = mItemList.get(position);
+        Item currentItem = mItemList2.get(position);
         URL url = null;
         try {
             String imageurl=currentItem.getImage();
@@ -60,11 +60,13 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        holder.name.setText(currentItem.getName());
+        holder.calorie.setText(currentItem.getCalorie());
 
     }
     @Override
     public int getItemCount() {
-        return mItemList.size();
+        return mItemList2.size();
     }
 }
 

@@ -20,6 +20,11 @@ public class Item {
         this.calorie = calorie;
         this.timestamp = timestamp;
     }
+    public Item(String image, String name, String calorie) {
+        this.image = image;
+        this.name = name;
+        this.calorie = calorie;
+    }
 
 
     public Long getId(){return id;}
