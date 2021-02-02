@@ -84,11 +84,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         navigationDrawer();
 
-
         System.out.println("it is calling create item list");
         buildRecyclerView();
         retrieveItemList(LocalDate.now(), useremail);
-
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

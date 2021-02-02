@@ -53,12 +53,14 @@ public class HistoryEditActivity extends AppCompatActivity {
         foodCal.setText(item.getCalorie());
         saveButton =findViewById(R.id.buttonsave);
         saveButton.setOnClickListener(v -> {
-            updateImage(item.getId(),name,calorie);
+            updateImage(item.getId());
         });
 
     }
 
-    public void updateImage(Long id, String name, String calorie){
+    public void updateImage(Long id){
+        String name=foodName.getText().toString();
+        String calorie=foodCal.getText().toString();
         //TODO should we consider post for this??
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/history/updateImage?id=" + id + "&name=" + name+ "&calorie=" + calorie;
@@ -68,7 +70,8 @@ public class HistoryEditActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(HistoryEditActivity.this, "updated successfully", Toast.LENGTH_SHORT).show();
-                        finish();
+                        Intent intent=new Intent(HistoryEditActivity.this,HistoryActivity.class);
+                        startActivity(intent);
                     }
 
                 }, new Response.ErrorListener() {
