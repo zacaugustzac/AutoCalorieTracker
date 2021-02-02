@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -30,8 +31,15 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -61,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ComboLineColumnChartView chart;
     private ComboLineColumnChartData data;
     List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
+    private TextView textChartDateRangeView;
+    LocalDate today = LocalDate.now();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +167,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         chart = findViewById(R.id.chart);
         chart.setOnValueTouchListener(new ValueTouchListener());
         generateData();
+        prepareDateRange();
     }
+    private void prepareDateRange(){
+        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
 
+        String formattedToday = today.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
+        LocalDate sixDaysAgo = today.minusDays(6);
+        String formattedSixDaysAgo = sixDaysAgo.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
+//        textChartDateRangeView.setText(formattedSixDaysAgo+" - "+formattedToday);
+        textChartDateRangeView.setText(today.getDayOfWeek().toString());
+    }
 
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
@@ -171,6 +190,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AxisValue tempAxisValue;
 
         String[] daysOfTheWeek = {"M","T","W","T","F","S","S"};
+        int todayOfWeek = 4;
+        switch (today.getDayOfWeek().toString()) {
+            case "MONDAY":
+                daysOfTheWeek = new String[] {"T","W","T","F","S","S","M"};
+                break;
+            case "TUESDAY":
+                daysOfTheWeek = new String[] {"W","T","F","S","S","M","T"};
+                break;
+            case "WEDNESDAY":
+                daysOfTheWeek = new String[] {"T","F","S","S","M","T","W"};
+                break;
+            case "THURSDAY":
+                daysOfTheWeek = new String[] {"F","S","S","M","T","W","T"};
+                break;
+            case "FRIDAY":
+                daysOfTheWeek = new String[] {"S","S","M","T","W","T","F"};
+                break;
+            case "SATURDAY":
+                daysOfTheWeek = new String[] {"S","M","T","W","T","F","S"};
+                break;
+            case "SUNDAY":
+                daysOfTheWeek = new String[] {"M","T","W","T","F","S","S"};
+                break;
+        }
         for (int i = 0; i <= 6; i += 1){
             tempAxisValue = new AxisValue(i);
             tempAxisValue.setLabel(daysOfTheWeek[i]);
