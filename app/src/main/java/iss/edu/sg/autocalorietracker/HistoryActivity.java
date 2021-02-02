@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
@@ -49,9 +50,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private ArrayList<Item> mItemList2;
     //TODO later need to based session registration
     private String useremail = "ZAC@GMAIL.COM";
-
-
-    private Button share, edit, delete;
 
     //variables for menu
     private DrawerLayout drawerLayout;
@@ -113,12 +111,26 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onShareClick(int position) {
+                //TODO how to test this on real facebook/ instagram app to make sure it is working
+                Item a= mItemList.get(position);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                Uri picUri = Uri.parse(a.getImage());
+                System.out.println(a.getImage());
+                //"https://images.deliveryhero.io/image/fd-sg/Products/5514328.jpg?width=302"
+                //.replace("localhost:8080","10.0.2.2:8080");
+                shareIntent.putExtra(Intent.EXTRA_STREAM,picUri);
+                shareIntent.setType("image/png");
+                startActivity(Intent.createChooser(shareIntent, "Send To"));
 
             }
 
             @Override
             public void onEditClick(int position) {
-
+                Item a= mItemList.get(position);
+                Intent intent=new Intent(HistoryActivity.this,HistoryEditActivity.class);
+                intent.putExtra("item",a);
+                startActivity(intent);
             }
 
             @Override
