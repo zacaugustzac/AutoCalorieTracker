@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
+    android:orientation="vertical"
     tools:context=".SignUpActivity">
 
     <ImageView
@@ -17,97 +17,342 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
         android:fontFamily="@font/bungee"
         android:text="Welcome"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        android:layout_marginTop="-20dp"/>
+        android:textSize="30sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
         android:text="SignUp to start your new account"
-        android:textSize="18sp"
-        android:layout_marginTop="-20dp"/>
+        android:textSize="18sp" />
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"/>
+                android:hint="Email">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            app:passwordToggleEnabled="true">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:hint="Password"
+                app:passwordToggleEnabled="true">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose Gender"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"/>
 
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
-            <RadioButton
-                android:id="@+id/radioButton"
+                <TextView
+                    android:id="@+id/year2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Select birth year"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+                <Spinner
+                    android:id="@+id/year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="90dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView17"
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose your gender"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/male"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/female"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.391"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="108dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="85dp"
+                        android:text="Male"
+                        android:textSize="18sp" />
+
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:text="Female"
+                        android:textSize="18sp" />
+
+                </RadioGroup>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose your weight"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/weight1"
+                    android:layout_width="43dp"
+                    android:layout_height="81dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="center"
+                    android:src="@drawable/male"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+                <ImageView
+                    android:id="@+id/weight2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/female"
+                    app:layout_constraintEnd_toStartOf="@+id/weight3"
+                    app:layout_constraintStart_toEndOf="@+id/weight1"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                <ImageView
+                    android:id="@+id/weight3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/female"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                <RadioGroup
+                    android:id="@+id/radioWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="108dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/w1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="45dp"
+                        android:text="Male"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/w2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:text="Female"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/w3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:text="Female"
+                        android:textSize="12sp" />
+
+                </RadioGroup>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose your height"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/height1"
+                    android:layout_width="60dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/male"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+
+                <ImageView
+                    android:id="@+id/height2"
+                    android:layout_width="70dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/female"
+                    app:layout_constraintEnd_toStartOf="@+id/height3"
+                    app:layout_constraintStart_toEndOf="@+id/height1"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                <ImageView
+                    android:id="@+id/height3"
+                    android:layout_width="80dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/female"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                <RadioGroup
+                    android:id="@+id/radioHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="108dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RadioButton
+                        android:id="@+id/h1"
+                        android:theme="@style/RadioButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="45dp"
+                        android:text="Male"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/h2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:text="Female"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/h3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50dp"
+                        android:text="Female"
+                        android:textSize="12sp" />
+
+                </RadioGroup>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Male"
-                android:layout_marginRight="20dp"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="Sign Up" />
 
-            <RadioButton
-                android:id="@+id/radioButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Female"
-                android:layout_marginLeft="20dp"/>
-        </RadioGroup>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select your age"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"/>
-        <DatePicker
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:datePickerMode="spinner"
-            android:calendarViewShown="false"
-            android:spinnersShown="true"/>
-
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
