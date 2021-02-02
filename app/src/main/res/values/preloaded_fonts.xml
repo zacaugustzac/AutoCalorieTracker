@@ -2,8 +2,11 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/aclonica</item>
+        <item>@font/antic</item>
         <item>@font/archivo_narrow_bold</item>
         <item>@font/asap</item>
         <item>@font/baloo</item>
+        <item>@font/bangers</item>
+        <item>@font/bungee</item>
     </array>
 </resources>
