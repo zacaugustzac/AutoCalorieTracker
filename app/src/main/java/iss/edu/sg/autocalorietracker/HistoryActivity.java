@@ -56,12 +56,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private NavigationView navigationView;
 
     private ImageView menuIcon;
-    private Button share1;
-    private Button editText;
-    private Button remove;
     private TextView datenow;
     private TextView totalcalorie;
     private TextView remcalorie;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +75,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         navigationView = findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
 
+        mRecyclerView = findViewById(R.id.GridView);
+        mRecyclerView2 = findViewById(R.id.GridView2);
+
         //Navigation Drawer Menu
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -91,21 +92,23 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         StrictMode.setThreadPolicy(policy);
 
 
+
+
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = findViewById(R.id.GridView);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        Adapter mAdapter = new Adapter(mItemList);
+
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        Adapter mAdapter = new Adapter(mItemList);
         mRecyclerView.setAdapter(mAdapter);
 
-        mRecyclerView2 = findViewById(R.id.GridView2);
+
         mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setHasFixedSize(true);
         Adapter2 mAdapter2 = new Adapter2(mItemList2);
-        mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setAdapter(mAdapter2);
 
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
@@ -122,6 +125,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 shareIntent.putExtra(Intent.EXTRA_STREAM,picUri);
                 shareIntent.setType("image/png");
                 startActivity(Intent.createChooser(shareIntent, "Send To"));
+                mAdapter.notifyDataSetChanged();
 
             }
 
@@ -131,6 +135,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 Intent intent=new Intent(HistoryActivity.this,HistoryEditActivity.class);
                 intent.putExtra("item",a);
                 startActivity(intent);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -220,6 +225,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(HistoryActivity.this, "removed successfully", Toast.LENGTH_SHORT).show();
+                        double curremainder=Double.valueOf(remcalorie.getText().toString().split(" Kcal")[0]);
+                        showRecommendation(curremainder);
                     }
 
                 }, new Response.ErrorListener() {
@@ -251,9 +258,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 String url = ans.getString("url");
                                 double calorie = ans.getDouble("calorie");
                                 mItemList2.add(new Item(url, name, "" + calorie));
-                                buildRecyclerView();
 
                             }
+                            buildRecyclerView();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -303,9 +310,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
                                 mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
-                                //buildRecyclerView();
+
 
                             }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
