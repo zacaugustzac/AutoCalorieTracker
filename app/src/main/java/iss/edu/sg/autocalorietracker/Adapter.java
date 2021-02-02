@@ -117,7 +117,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
     @Override
     public int getItemCount() {
-        return mItemList.size();
+
+        try {
+            return mItemList.size();
+        } catch (Exception ex){return 0;}
+
     }
 }
 

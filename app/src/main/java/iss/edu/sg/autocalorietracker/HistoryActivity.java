@@ -86,7 +86,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         System.out.println("it is calling create item list");
         retrieveItemList(LocalDate.now(), useremail);
-
+        buildRecyclerView();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -251,7 +251,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 String url = ans.getString("url");
                                 double calorie = ans.getDouble("calorie");
                                 mItemList2.add(new Item(url, name, "" + calorie));
-                                buildRecyclerView();
+//                                buildRecyclerView();
 
                             }
                         } catch (JSONException e) {
