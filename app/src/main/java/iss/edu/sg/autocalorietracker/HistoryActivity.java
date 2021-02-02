@@ -56,8 +56,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private NavigationView navigationView;
 
     private ImageView menuIcon;
-    private Button share1;
-    private Button editText;
+    private Adapter mAdapter;
+    private Adapter2 mAdapter2;
     private Button remove;
     private TextView datenow;
     private TextView totalcalorie;
@@ -84,9 +84,12 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         navigationDrawer();
 
+
         System.out.println("it is calling create item list");
-        retrieveItemList(LocalDate.now(), useremail);
         buildRecyclerView();
+        retrieveItemList(LocalDate.now(), useremail);
+
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -94,19 +97,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
     public void buildRecyclerView() {
+        mItemList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.GridView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        Adapter mAdapter = new Adapter(mItemList);
+        mAdapter = new Adapter(mItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView2 = findViewById(R.id.GridView2);
-        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        mRecyclerView2.setHasFixedSize(true);
-        Adapter2 mAdapter2 = new Adapter2(mItemList2);
-        mRecyclerView2.setLayoutManager(mLayoutManager2);
-        mRecyclerView2.setAdapter(mAdapter2);
 
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
@@ -149,6 +146,14 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
             }
         });
+
+        mItemList2 = new ArrayList<>();
+        mRecyclerView2 = findViewById(R.id.GridView2);
+        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        mRecyclerView2.setHasFixedSize(true);
+        mAdapter2 = new Adapter2(mItemList2);
+        mRecyclerView2.setLayoutManager(mLayoutManager2);
+        mRecyclerView2.setAdapter(mAdapter2);
     }
 
     //set the drawer
@@ -236,11 +241,12 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/api/food/getSuggestion?remainder=" + remainder;
         System.out.println("url=" + url);
-        mItemList2 = new ArrayList<>();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println("Response is: " + response.toString());
                         JSONArray result = null;
                         try {
                             result = new JSONArray(response);
@@ -251,9 +257,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 String url = ans.getString("url");
                                 double calorie = ans.getDouble("calorie");
                                 mItemList2.add(new Item(url, name, "" + calorie));
-//                                buildRecyclerView();
-
                             }
+                            mAdapter2.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -276,7 +281,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/history/getTodayHistory?date=" + date + "&email=" + email;
         System.out.println("url=" + url);
-        mItemList = new ArrayList<>();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -303,9 +308,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
                                 mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
-                                //buildRecyclerView();
-
                             }
+                            mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -313,6 +317,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         double remainder = threshold - sum;
                         remcalorie.setText(remainder + " Kcal left for today");
                         showRecommendation(remainder);
+
                         //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {

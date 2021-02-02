@@ -37,7 +37,7 @@ public class HistoryEditActivity extends AppCompatActivity {
         foodPic =findViewById(R.id.imageView);
         URL url = null;
         try {
-            url = new URL(item.getImage());
+            url = new URL(item.getImage().replace("localhost:8080","10.0.2.2:8080"));
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             foodPic.setImageBitmap(bmp);
         } catch (MalformedURLException e) {
