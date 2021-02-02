@@ -141,6 +141,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 curremainder+=Double.valueOf(a.getCalorie().toString());
                 remcalorie.setText(curremainder+" Kcal left for today");
                 mAdapter.notifyItemRemoved(position);
+                showRecommendation(curremainder);
 
             }
         });
