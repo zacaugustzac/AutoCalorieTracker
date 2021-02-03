@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/bungee"
         android:text="Hello there, welcome back"
-        android:textColor="@color/black"
         android:textSize="40sp"
         android:layout_marginTop="-20dp"/>
 
