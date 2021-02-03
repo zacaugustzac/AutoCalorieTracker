@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.forgotpsw:
+                intent = new Intent(LoginActivity.this, EmailActivity.class);
+                startActivity(intent);
                 break;
 
             default:
