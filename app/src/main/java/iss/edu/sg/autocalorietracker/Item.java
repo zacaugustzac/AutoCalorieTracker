@@ -2,9 +2,10 @@ package iss.edu.sg.autocalorietracker;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Item {
+public class Item implements Serializable {
 
 //    private Integer image;
     private Long id;

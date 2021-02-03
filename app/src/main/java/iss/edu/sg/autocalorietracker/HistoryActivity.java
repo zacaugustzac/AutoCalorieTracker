@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
@@ -50,16 +51,13 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     //TODO later need to based session registration
     private String useremail = "ZAC@GMAIL.COM";
 
-
-    private Button share, edit, delete;
-
     //variables for menu
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
     private ImageView menuIcon;
-    private Button share1;
-    private Button editText;
+    private Adapter mAdapter;
+    private Adapter2 mAdapter2;
     private Button remove;
     private TextView datenow;
     private TextView totalcalorie;
@@ -87,6 +85,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         navigationDrawer();
 
         System.out.println("it is calling create item list");
+        buildRecyclerView();
         retrieveItemList(LocalDate.now(), useremail);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -96,29 +95,37 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
     public void buildRecyclerView() {
+        mItemList = new ArrayList<>();
         mRecyclerView = findViewById(R.id.GridView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        Adapter mAdapter = new Adapter(mItemList);
+        mAdapter = new Adapter(mItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView2 = findViewById(R.id.GridView2);
-        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        mRecyclerView2.setHasFixedSize(true);
-        Adapter2 mAdapter2 = new Adapter2(mItemList2);
-        mRecyclerView2.setLayoutManager(mLayoutManager2);
-        mRecyclerView2.setAdapter(mAdapter2);
 
         mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onShareClick(int position) {
+                //TODO how to test this on real facebook/ instagram app to make sure it is working
+                Item a= mItemList.get(position);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                Uri picUri = Uri.parse(a.getImage());
+                System.out.println(a.getImage());
+                //"https://images.deliveryhero.io/image/fd-sg/Products/5514328.jpg?width=302"
+                //.replace("localhost:8080","10.0.2.2:8080");
+                shareIntent.putExtra(Intent.EXTRA_STREAM,picUri);
+                shareIntent.setType("image/png");
+                startActivity(Intent.createChooser(shareIntent, "Send To"));
 
             }
 
             @Override
             public void onEditClick(int position) {
-
+                Item a= mItemList.get(position);
+                Intent intent=new Intent(HistoryActivity.this,HistoryEditActivity.class);
+                intent.putExtra("item",a);
+                startActivity(intent);
             }
 
             @Override
@@ -134,9 +141,18 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 curremainder+=Double.valueOf(a.getCalorie().toString());
                 remcalorie.setText(curremainder+" Kcal left for today");
                 mAdapter.notifyItemRemoved(position);
+                showRecommendation(curremainder);
 
             }
         });
+
+        mItemList2 = new ArrayList<>();
+        mRecyclerView2 = findViewById(R.id.GridView2);
+        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        mRecyclerView2.setHasFixedSize(true);
+        mAdapter2 = new Adapter2(mItemList2);
+        mRecyclerView2.setLayoutManager(mLayoutManager2);
+        mRecyclerView2.setAdapter(mAdapter2);
     }
 
     //set the drawer
@@ -224,11 +240,12 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/api/food/getSuggestion?remainder=" + remainder;
         System.out.println("url=" + url);
-        mItemList2 = new ArrayList<>();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        System.out.println("Response is: " + response.toString());
                         JSONArray result = null;
                         try {
                             result = new JSONArray(response);
@@ -239,9 +256,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 String url = ans.getString("url");
                                 double calorie = ans.getDouble("calorie");
                                 mItemList2.add(new Item(url, name, "" + calorie));
-                                buildRecyclerView();
-
                             }
+                            mAdapter2.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -264,7 +280,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/history/getTodayHistory?date=" + date + "&email=" + email;
         System.out.println("url=" + url);
-        mItemList = new ArrayList<>();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -291,9 +307,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
                                 mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
-                                //buildRecyclerView();
-
                             }
+                            mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -301,6 +316,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         double remainder = threshold - sum;
                         remcalorie.setText(remainder + " Kcal left for today");
                         showRecommendation(remainder);
+
                         //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {

@@ -58,18 +58,27 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             calorie = itemView.findViewById(R.id.kcal);
             timestamp = itemView.findViewById(R.id.timestamp);
             share  = itemView.findViewById(R.id.share);
+            share.setOnClickListener(v -> {if (listener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onShareClick(position);
+                }
+            }});
             edit  = itemView.findViewById(R.id.edit);
+            edit.setOnClickListener(v->{if (listener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onEditClick(position);
+                }
+            }});
             delete  = itemView.findViewById(R.id.delete);
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            delete.setOnClickListener(v-> {
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onDeleteClick(position);
                         }
                     }
-                }
             });
         }
 
@@ -108,7 +117,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
     @Override
     public int getItemCount() {
-        return mItemList.size();
+
+        try {
+            return mItemList.size();
+        } catch (Exception ex){return 0;}
+
     }
 }
 
