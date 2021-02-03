@@ -33,7 +33,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -192,7 +193,7 @@
                     android:layout_marginStart="44dp"
                     android:layout_marginTop="8dp"
                     android:scaleType="center"
-                    android:src="@drawable/male"
+                    android:src="@drawable/m1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -202,7 +203,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/female"
+                    android:src="@drawable/male"
                     app:layout_constraintEnd_toStartOf="@+id/weight3"
                     app:layout_constraintStart_toEndOf="@+id/weight1"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -212,7 +213,8 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/female"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/m3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -232,8 +234,7 @@
                         android:id="@+id/w1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="45dp"
-                        android:text="Male"
+                        android:text="50kg-60kg"
                         android:textSize="12sp" />
 
                     <RadioButton
@@ -241,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="50dp"
-                        android:text="Female"
+                        android:text="61kg-70kg"
                         android:textSize="12sp" />
 
                     <RadioButton
@@ -249,7 +250,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="50dp"
-                        android:text="Female"
+                        android:text="71kg-80kg"
                         android:textSize="12sp" />
 
                 </RadioGroup>
@@ -276,7 +277,7 @@
                     android:id="@+id/height1"
                     android:layout_width="60dp"
                     android:layout_height="50dp"
-                    android:layout_marginStart="44dp"
+                    android:layout_marginStart="30dp"
                     android:layout_marginTop="20dp"
                     android:src="@drawable/male"
                     app:layout_constraintStart_toStartOf="parent"
@@ -288,7 +289,7 @@
                     android:layout_width="70dp"
                     android:layout_height="60dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/female"
+                    android:src="@drawable/male"
                     app:layout_constraintEnd_toStartOf="@+id/height3"
                     app:layout_constraintStart_toEndOf="@+id/height1"
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -297,7 +298,8 @@
                     android:id="@+id/height3"
                     android:layout_width="80dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/female"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/male"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -318,24 +320,23 @@
                         android:theme="@style/RadioButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="45dp"
-                        android:text="Male"
+                        android:text="160cm-170cm"
                         android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/h2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="50dp"
-                        android:text="Female"
+                        android:layout_marginLeft="15dp"
+                        android:text="161cm-170cm"
                         android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/h3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="50dp"
-                        android:text="Female"
+                        android:layout_marginLeft="15dp"
+                        android:text="171cm-180cm"
                         android:textSize="12sp" />
 
                 </RadioGroup>
@@ -345,6 +346,7 @@
 
 
             <Button
+                android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
