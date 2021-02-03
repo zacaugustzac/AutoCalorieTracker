@@ -19,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.LimitLine;
@@ -30,6 +36,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -78,6 +87,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         drawComboChart();
+
+        //return list of calories
+        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/weekly/getDailyCalories";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response is: "+ response.toString());
+                        JSONArray result= null;
+                        try {
+                            result = new JSONArray(response.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//                        adp.setData(result);
+                        Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(MainActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+//        textChartDateRangeView.setText(result[0]);
+        //end return list of calories
+
+
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
@@ -167,16 +207,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         chart = findViewById(R.id.chart);
         chart.setOnValueTouchListener(new ValueTouchListener());
         generateData();
-        prepareDateRange();
+        changeDateRange();
     }
-    private void prepareDateRange(){
-        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
 
+    private void changeDateRange(){
+        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
         String formattedToday = today.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
         LocalDate sixDaysAgo = today.minusDays(6);
         String formattedSixDaysAgo = sixDaysAgo.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
-//        textChartDateRangeView.setText(formattedSixDaysAgo+" - "+formattedToday);
-        textChartDateRangeView.setText(today.getDayOfWeek().toString());
+        textChartDateRangeView.setText(formattedSixDaysAgo+" - "+formattedToday);
     }
 
     private void generateData() {
@@ -190,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AxisValue tempAxisValue;
 
         String[] daysOfTheWeek = {"M","T","W","T","F","S","S"};
-        int todayOfWeek = 4;
         switch (today.getDayOfWeek().toString()) {
             case "MONDAY":
                 daysOfTheWeek = new String[] {"T","W","T","F","S","S","M"};
