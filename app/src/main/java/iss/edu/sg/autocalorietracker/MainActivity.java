@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
     private TextView textChartDateRangeView;
     LocalDate today = LocalDate.now();
+    private String hzResult = "old";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,20 +94,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RequestQueue queue = Volley.newRequestQueue(this);
         String url="http://10.0.2.2:8080/weekly/getDailyCalories";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("Response is: "+ response.toString());
-                        JSONArray result= null;
-                        try {
-                            result = new JSONArray(response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-//                        adp.setData(result);
-                        Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    System.out.println("Response is: "+ response.toString());
+                    JSONArray result= null;
+                    hzResult="old2";
+                    hzResult=response;
+                    try {
+////                            result = new JSONArray(response.toString());
+//                               hzResult = response.toString();
+                                textChartDateRangeView.setText(hzResult);
+////                            Toast.makeText(MainActivity.this,response.toString(),Toast.LENGTH_SHORT).show();
+////                        } catch (JSONException e) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                },new Response.ErrorListener() {
+                    Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                    textChartDateRangeView.setText(hzResult);
+                }
+            },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         queue.add(stringRequest);
-//        textChartDateRangeView.setText(result[0]);
+
         //end return list of calories
 
 
