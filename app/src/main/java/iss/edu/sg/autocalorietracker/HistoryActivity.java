@@ -202,7 +202,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 startActivity(intent2);
                 break;
             case R.id.nav_reminders:
-                Intent intent3 = new Intent(HistoryActivity.this, RemindersActivity.class);
+                Intent intent3 = new Intent(HistoryActivity.this, ReminderActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.nav_share:

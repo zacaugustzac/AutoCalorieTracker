@@ -11,28 +11,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class PlanActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ReminderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     //variables for menu
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ImageView menuIcon;
+    private Button save;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_plan);
+        setContentView(R.layout.activity_reminder);
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
         navigationView =findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
+        save = findViewById(R.id.save);
+        save.setOnClickListener(this);
 
         //tool bar
         setSupportActionBar(toolbar);
@@ -80,20 +85,18 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
         switch (menuItem.getItemId()){
             case R.id.nav_home:
-                Intent intent0 = new Intent(PlanActivity.this, MainActivity.class);
+                Intent intent0 = new Intent(ReminderActivity.this, MainActivity.class);
                 startActivity(intent0);
                 break;
             case R.id.nav_profile:
-                Intent intent1 = new Intent(PlanActivity.this, ProfileActivity.class);
+                Intent intent1 = new Intent(ReminderActivity.this, ProfileActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.nav_plan:
-                Intent intent2 = new Intent(PlanActivity.this, PlanActivity.class);
+                Intent intent2 = new Intent(ReminderActivity.this, PlanActivity.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_reminders:
-                Intent intent3 = new Intent(PlanActivity.this, ReminderActivity.class);
-                startActivity(intent3);
                 break;
             case R.id.nav_share:
                 Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
@@ -105,4 +108,11 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        Intent intent = null;
+        Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
+        intent = new Intent(ReminderActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 }

@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent1);
                 break;
             case R.id.nav_reminders:
-                Intent intent2 = new Intent(MainActivity.this, RemindersActivity.class);
+                Intent intent2 = new Intent(MainActivity.this, ReminderActivity.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_share:

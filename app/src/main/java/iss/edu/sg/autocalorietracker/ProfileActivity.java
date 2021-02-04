@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 startActivity(intent1);
                 break;
             case R.id.nav_reminders:
-                Intent intent2 = new Intent(ProfileActivity.this, RemindersActivity.class);
+                Intent intent2 = new Intent(ProfileActivity.this, ReminderActivity.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_share:
