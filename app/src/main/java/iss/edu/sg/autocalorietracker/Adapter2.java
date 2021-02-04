@@ -34,7 +34,6 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
             name = itemView.findViewById(R.id.catalogue);
             image = itemView.findViewById(R.id.img);
             calorie = itemView.findViewById(R.id.kcal);
-
         }
     }
 
