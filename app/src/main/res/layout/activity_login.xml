@@ -64,6 +64,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/result"
+        />
+
         <Button
             android:id="@+id/forgotpsw"
             android:layout_width="wrap_content"
