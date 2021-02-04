@@ -11,7 +11,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,9 +51,9 @@ import java.util.Map;
 
 public class CaptureActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private static String ipaddress="192.168.10.141";
-    private static final String ROOT_URL = "http://"+ipaddress+":8080/api/image/predict";
-    //private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; //for android emulator
+//    private static String ipaddress="192.168.10.141";
+//    private static final String ROOT_URL = "http://"+ipaddress+":8080/api/image/predict";
+    private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; //for android emulator
     private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST =1 ;
     private Bitmap bitmap;
@@ -307,11 +309,6 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                                     progress.setVisibility(View.INVISIBLE);
                                 }
                             });
-
-
-
-
-
                             //Toast.makeText(getApplicationContext(), name+" "+cal, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -330,7 +327,9 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-                String username="kevin";
+                SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+                String username=sharedPref.getString("email",null);
+//                String username="ZAC@GMAIL.COM";
                 long imagename = System.currentTimeMillis();
                 params.put("image", new DataPart(username+"_"+imagename + ".png", getFileDataFromDrawable(bitmap)));
                 return params;
@@ -348,6 +347,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
             takePhoto();
         }else if(v==historyview){
             Intent intent= new Intent(this,HistoryActivity.class);
+            intent.putExtra("date",System.currentTimeMillis());
             startActivity(intent);
         }
     }
