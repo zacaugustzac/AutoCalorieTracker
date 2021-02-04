@@ -8,7 +8,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -77,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ComboLineColumnChartView chart;
     private ComboLineColumnChartData data;
-    List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
+//    List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
+    List<Integer> calorieHistory = new ArrayList<>();
     private TextView textChartDateRangeView;
     LocalDate today = LocalDate.now();
     private String hzResult = "old";
@@ -87,44 +90,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawComboChart();
+        //get email
+        SharedPreferences sharedPref=getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String useremail=sharedPref.getString("email",null);
+
+        getDataFromDB(today, useremail);
 
         //return list of calories
-        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/weekly/getDailyCalories";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    System.out.println("Response is: "+ response.toString());
-                    JSONArray result= null;
-                    hzResult="old2";
-                    hzResult=response;
-                    try {
-////                            result = new JSONArray(response.toString());
-//                               hzResult = response.toString();
-                                textChartDateRangeView.setText(hzResult);
-////                            Toast.makeText(MainActivity.this,response.toString(),Toast.LENGTH_SHORT).show();
-////                        } catch (JSONException e) {
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
-                    textChartDateRangeView.setText(hzResult);
-                }
-            },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getMessage());
-                Toast.makeText(MainActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
-            }
-        });
-        queue.add(stringRequest);
 
         //end return list of calories
-
-
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
@@ -132,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menuIcon = findViewById(R.id.menu);
         photoIcon = findViewById(R.id.photo);
         photoIcon.setOnClickListener(this);
-
 
         //tool bar
         setSupportActionBar(toolbar);
@@ -143,7 +116,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationDrawer();
+    }
 
+    public void getDataFromDB(LocalDate date, String useremail){
+
+        textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/weekly/getDailyCalories?date=" + date + "&email=" + useremail;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response is: "+ response);
+                        String res = response.substring(1,response.length()-1);
+                        System.out.println("Response is: "+ res);
+                        String str[] = res.split(",");
+//                        calorieHistory.clear();
+                        calorieHistory = Arrays.asList(1400,1400,1880,1000,1400,1300,1200);
+//                        for(String i : str){
+//                            calorieHistory.add(Integer.parseInt(i));
+//                        }
+
+                        hzResult=response;
+                        try {
+                            textChartDateRangeView.setText(hzResult);
+                            Toast.makeText(MainActivity.this,"GOOD",Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        drawComboChart();
+                        Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                        textChartDateRangeView.setText(hzResult);
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(MainActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void drawComboChart() {
+        chart = findViewById(R.id.chart);
+        chart.setOnValueTouchListener(new ValueTouchListener());
+        generateData();
+        changeDateRange();
     }
 
     private void navigationDrawer() {
@@ -210,12 +229,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
     }
 
-    public void drawComboChart() {
-        chart = findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
-        generateData();
-        changeDateRange();
-    }
 
     private void changeDateRange(){
         textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
