@@ -15,13 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoCalorieTracker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReminderActivity"></activity>
-        <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".ResetPasswordActivity"></activity>
         <activity android:name=".EmailActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".HistoryActivity" />
+        <activity android:name=".HistoryEditActivity" />
+        <activity android:name=".RemindersActivity" />
         <activity android:name=".PlanActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".FlashActivity">

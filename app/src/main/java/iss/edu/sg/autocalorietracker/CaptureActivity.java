@@ -11,7 +11,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -311,11 +313,6 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                                     progress.setVisibility(View.INVISIBLE);
                                 }
                             });
-
-
-
-
-
                             //Toast.makeText(getApplicationContext(), name+" "+cal, Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -334,8 +331,9 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-                //TODO: later need to be replaced from the session instead of hardcoded here
-                String username="ZAC@GMAIL.COM";
+                SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+                String username=sharedPref.getString("email",null);
+//                String username="ZAC@GMAIL.COM";
                 long imagename = System.currentTimeMillis();
                 params.put("image", new DataPart(username+"_"+imagename + ".png", getFileDataFromDrawable(bitmap)));
                 return params;
@@ -353,6 +351,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
             takePhoto();
         }else if(v==historyview){
             Intent intent= new Intent(this,HistoryActivity.class);
+            intent.putExtra("date",System.currentTimeMillis());
             startActivity(intent);
         }
     }

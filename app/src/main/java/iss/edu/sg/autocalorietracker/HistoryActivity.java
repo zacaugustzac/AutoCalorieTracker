@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -33,7 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.TimeZone;
 import java.time.LocalDate;
 import java.text.DateFormat;
@@ -48,8 +52,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private RecyclerView.LayoutManager mLayoutManager2;
     private ArrayList<Item> mItemList;
     private ArrayList<Item> mItemList2;
-    //TODO later need to based session registration
-    private String useremail = "ZAC@GMAIL.COM";
 
     //variables for menu
     private DrawerLayout drawerLayout;
@@ -77,6 +79,17 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         navigationView = findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
 
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        String useremail=sharedPref.getString("email",null);
+        Float curremainder=sharedPref.getFloat("calorie",0);
+
+        remcalorie.setText(curremainder+" Kcal left for today");
+        //private String useremail = "ZAC@GMAIL.COM";
+
+        Intent intent=getIntent();
+        Long currentDate=intent.getLongExtra("date",System.currentTimeMillis());
+        LocalDate date = Instant.ofEpochMilli(currentDate).atZone(ZoneId.systemDefault()).toLocalDate();
+
         //Navigation Drawer Menu
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -86,7 +99,8 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
         System.out.println("it is calling create item list");
         buildRecyclerView();
-        retrieveItemList(LocalDate.now(), useremail);
+
+        retrieveItemList(date, useremail);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -221,7 +235,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     }
 
     public void deleteImage(Long id, int position) {
-        //TODO in the java part later
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2:8080/history/deleteImage/" + id;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -254,7 +267,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         JSONArray result = null;
                         try {
                             result = new JSONArray(response);
-
+                            mItemList2.clear();
                             for (int x = 0; x < result.length(); x++) {
                                 JSONObject ans = result.getJSONObject(x);
                                 String name = ans.getString("foodName");
@@ -293,7 +306,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         System.out.println("Response is: " + response.toString());
                         JSONArray result = null;
                         double sum = 0;
-                        double threshold = 0;
+                        double threshold=Double.valueOf(remcalorie.getText().toString().split(" Kcal")[0]);
                         try {
                             result = new JSONArray(response);
 
@@ -306,7 +319,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 double calorie = ans.getDouble("calorie");
                                 sum += calorie;
                                 threshold = ans.getJSONObject("dailyHistory").getJSONObject("user").getDouble("recommendedCalories");
-                                Long time = ans.getLong("epochTime");
+                                Long time = ans.getLong("epochDateUpload");
                                 Date date = new Date(time);
                                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
