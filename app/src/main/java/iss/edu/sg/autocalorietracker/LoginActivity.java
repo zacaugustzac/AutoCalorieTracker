@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout emailfield;
     private TextInputLayout passfield;
     private TextView resultTextView;
+    private CheckBox remembercheck;
 
 
     @Override
@@ -44,6 +46,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         emailfield=findViewById(R.id.email);
         passfield=findViewById(R.id.password);
         resultTextView=findViewById(R.id.result);
+        remembercheck=findViewById(R.id.checkbox_remember);
+
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        String remember=sharedPref.getString("remember","no");
+
+        if(remember.contentEquals("yes")){
+            String email=sharedPref.getString("email",null);
+            String password=sharedPref.getString("password",null);
+            emailfield.getEditText().setText(email);
+            passfield.getEditText().setText(password);
+            remembercheck.setChecked(true);
+        }
 
     }
 
@@ -79,6 +93,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPref.edit();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_remember:
+                if (checked){
+                    editor.putString("remember","yes");
+                    editor.commit();
+                }
+                // Put some meat on the sandwich
+            else{
+                    editor.putString("remember","no");
+                    editor.commit();
+            }
+                // Remove the meat
+                break;
+        }
+    }
+
     public void submitLogin(String name, String password){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JSONObject object = new JSONObject();
@@ -100,9 +137,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                 double calorierec=response.getDouble("recommendedCalories");
                                 String email=response.getString("email");
+                                String pass=response.getString("password");
                                 System.out.println("email= "+email);
                                 SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor=sharedPref.edit();
+                                editor.putString("password",pass);
                                 editor.putFloat("calorie",(float)calorierec);
                                 editor.putString("email",email);
                                 editor.commit();
