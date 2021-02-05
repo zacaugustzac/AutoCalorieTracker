@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/baloo"
-            android:text="Daily History"
+            android:text="View Plan"
             android:textSize="35sp" />
 
         <ScrollView

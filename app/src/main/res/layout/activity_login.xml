@@ -80,13 +80,13 @@
             android:background="#00000000"
             android:elevation="0dp"
             android:text="Forget password?"
-            android:textColor="@color/black" />
+            android:textColor="@color/color3" />
 
         <Button
             android:id="@+id/signIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="25dp"
             android:layout_marginBottom="5dp"
             android:text="Sign In" />
 
@@ -99,7 +99,7 @@
             android:background="#00000000"
             android:elevation="0dp"
             android:text="New User? SIGN UP"
-            android:textColor="@color/black" />
+            android:textColor="@color/color3" />
 
     </LinearLayout>
 

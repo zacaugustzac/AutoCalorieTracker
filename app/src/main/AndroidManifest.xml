@@ -22,7 +22,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistoryEditActivity" />
-        <activity android:name=".RemindersActivity" />
+        <activity android:name=".ReminderActivity" />
         <activity android:name=".PlanActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".FlashActivity">
