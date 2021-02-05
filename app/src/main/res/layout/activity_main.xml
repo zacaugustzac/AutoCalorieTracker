@@ -102,7 +102,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
                 app:layout_constraintVertical_bias="0.312" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/LastWeekButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="< Last Week"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.15"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart" />
+
+            <Button
+                android:id="@+id/NextWeekButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Next Week >"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.86"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 
