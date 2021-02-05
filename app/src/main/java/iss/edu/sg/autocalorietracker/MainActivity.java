@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String useremail=sharedPref.getString("email",null);
 
         //get data from db and draw chart
-        lastDayForChart = LocalDate.of(2021,1,28);//temp
+//        lastDayForChart = LocalDate.of(2021,1,28);//temp
+        System.out.println(lastDayForChart);
         getDataFromDB(lastDayForChart, useremail);
 
         //hooks
@@ -341,7 +342,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
 //            Toast.makeText(MainActivity.this, "Selected column: " + value, Toast.LENGTH_SHORT).show();
+
+            String[] listOfDates = new String[7];
+            for (int i=0; i<7;i++){
+                listOfDates[i] = lastDayForChart.minusDays(6-i).toString();
+            }
             Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+            intent.putExtra("date",listOfDates[columnIndex]);
+            System.out.println("listOfDates[columnIndex]" + listOfDates[columnIndex]);
             startActivity(intent);
         }
 

@@ -82,14 +82,16 @@
                 android:id="@+id/chart"
                 android:layout_width="400dp"
                 android:layout_height="400dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.454"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
-                />
+                app:layout_constraintVertical_bias="0.159" />
 
             <TextView
                 android:id="@+id/evaluate"
@@ -107,23 +109,25 @@
                 android:id="@+id/LastWeekButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="< Last Week"
+                android:text="&lt; Last Week"
+                app:layout_constraintBottom_toTopOf="@+id/evaluate"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.15"
+                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart" />
 
-            <Button
-                android:id="@+id/NextWeekButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Next Week >"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.86"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chart" />
+<!--            <Button-->
+<!--                android:id="@+id/NextWeekButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:text="Next Week >"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/evaluate"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.86"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/chart" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
