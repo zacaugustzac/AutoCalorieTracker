@@ -8,7 +8,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ComboLineColumnChartData data;
     List<Integer> calorieHistory = Arrays.asList(1400,1800,1300,1000,1400,1300,1200);
     private TextView textChartDateRangeView;
-    LocalDate today = LocalDate.now();
+    LocalDate date = LocalDate.now();
     private String hzResult = "old";
 
     @Override
@@ -87,25 +89,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawComboChart();
+
+        //get email
+        SharedPreferences sharedPref=getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String useremail=sharedPref.getString("email",null);
+
 
         //return list of calories
         textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/weekly/getDailyCalories";
+        String url="http://10.0.2.2:8080/weekly/getDailyCalories?date=" + date + "&email=" + useremail;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    System.out.println("Response is: "+ response.toString());
-                    JSONArray result= null;
-                    hzResult="old2";
+                    System.out.println("Response is: "+ response);
                     hzResult=response;
                     try {
                         textChartDateRangeView.setText(hzResult);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    drawComboChart();
                     Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     textChartDateRangeView.setText(hzResult);
                 }
@@ -117,10 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         queue.add(stringRequest);
-
-        //end return list of calories
-
-
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
@@ -139,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationDrawer();
+    }
+
+    public void getDataFromDB(LocalDate date, String useremail){
 
     }
 
@@ -215,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void changeDateRange(){
         textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
-        String formattedToday = today.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
-        LocalDate sixDaysAgo = today.minusDays(6);
+        String formattedToday = date.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
+        LocalDate sixDaysAgo = date.minusDays(6);
         String formattedSixDaysAgo = sixDaysAgo.format(DateTimeFormatter.ofPattern("dd/MM/yy"));
         textChartDateRangeView.setText(formattedSixDaysAgo+" - "+formattedToday);
     }
@@ -224,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void generateData() {
         // Chart looks the best when line data and column data have similar maximum viewports.
         data = new ComboLineColumnChartData(generateColumnData(), generateLineData());
-        chart.setComboLineColumnChartData(data);
+
 
         //axis
         List<AxisValue> axisValuesForX = new ArrayList<>();
@@ -232,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AxisValue tempAxisValue;
 
         String[] daysOfTheWeek = {"M","T","W","T","F","S","S"};
-        switch (today.getDayOfWeek().toString()) {
+        switch (date.getDayOfWeek().toString()) {
             case "MONDAY":
                 daysOfTheWeek = new String[] {"T","W","T","F","S","S","M"};
                 break;
@@ -271,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Axis axisY = new Axis(axisValuesForY);
         data.setAxisXBottom(axisX);
         data.setAxisYLeft(axisY);
+
+        chart.setComboLineColumnChartData(data);
     }
 
     private LineChartData generateLineData() {
