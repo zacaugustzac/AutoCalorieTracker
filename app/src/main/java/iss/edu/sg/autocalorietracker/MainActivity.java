@@ -102,11 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     hzResult="old2";
                     hzResult=response;
                     try {
-////                            result = new JSONArray(response.toString());
-//                               hzResult = response.toString();
-                                textChartDateRangeView.setText(hzResult);
-////                            Toast.makeText(MainActivity.this,response.toString(),Toast.LENGTH_SHORT).show();
-////                        } catch (JSONException e) {
+                        textChartDateRangeView.setText(hzResult);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
