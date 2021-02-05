@@ -15,11 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutoCalorieTracker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".ResetPasswordActivity"></activity>
+        <activity android:name=".EmailActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".HistoryActivity" />
         <activity android:name=".RemindersActivity" />
         <activity android:name=".PlanActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".FlashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +42,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CaptureActivity"></activity>
+        <activity android:name=".CaptureActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
