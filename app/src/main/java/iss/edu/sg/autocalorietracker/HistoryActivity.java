@@ -262,7 +262,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         JSONArray result = null;
                         try {
                             result = new JSONArray(response);
-
+                            mItemList2.clear();
                             for (int x = 0; x < result.length(); x++) {
                                 JSONObject ans = result.getJSONObject(x);
                                 String name = ans.getString("foodName");
