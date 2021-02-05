@@ -28,14 +28,15 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.w3c.dom.Text;
 
-public class ProfileActivity extends AppCompatActivity {
-    //    //variables for menu
-//    private DrawerLayout drawerLayout;
-//    private NavigationView navigationView;
-//    private Toolbar toolbar;
-//    private ImageView menuIcon;
-    private ImageButton heightBtn, weightBtn, activityBtn;
-    private TextView height, weight, activity;
+public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    //variables for menu
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
+    private ImageView menuIcon;
+    private ImageButton yearBtn, genderBtn, heightBtn, weightBtn, activityBtn;
+    private Button resetPassword, save;
+    private TextView height, weight, activity, year, gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +44,22 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         //hooks
-//        drawerLayout =findViewById(R.id.drawer_layout);
-//        navigationView =findViewById(R.id.nav_view);
-//        menuIcon = findViewById(R.id.menu);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        menuIcon = findViewById(R.id.menu);
 
         heightBtn = findViewById(R.id.heightBtn);
         weightBtn = findViewById(R.id.weightBtn);
         activityBtn = findViewById(R.id.activityBtn);
+        yearBtn = findViewById(R.id.yearBtn);
+        genderBtn = findViewById(R.id.genderBtn);
+        resetPassword = findViewById(R.id.resetPassword);
+        save = findViewById(R.id.save);
         height = findViewById(R.id.height);
         weight = findViewById(R.id.weight);
-
+        activity = findViewById(R.id.activity);
+        year = findViewById(R.id.year);
+        gender = findViewById(R.id.gender);
 
         setListeners();
 
@@ -60,14 +67,14 @@ public class ProfileActivity extends AppCompatActivity {
 //        setButtons();
 
         //tool bar
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         //Navigation Drawer Menu
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-//        drawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        navigationDrawer();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationDrawer();
     }
 
     private void setListeners() {
@@ -76,6 +83,10 @@ public class ProfileActivity extends AppCompatActivity {
         heightBtn.setOnClickListener(onClick);
         weightBtn.setOnClickListener(onClick);
         activityBtn.setOnClickListener(onClick);
+        yearBtn.setOnClickListener(onClick);
+        genderBtn.setOnClickListener(onClick);
+        resetPassword.setOnClickListener(onClick);
+        save.setOnClickListener(onClick);
 
     }
 
@@ -132,73 +143,95 @@ public class ProfileActivity extends AppCompatActivity {
                     bottomSheetDialog1.show();
                     break;
 
+
                 case R.id.activityBtn:
                     BottomSheetDialog bottomSheetDialog2 = new BottomSheetDialog(ProfileActivity.this);
                     bottomSheetDialog2.setContentView(R.layout.row_add_item2);
 
-                    Button update2 = bottomSheetDialog2.findViewById(R.id.update);
-//                    ImageButton btn = bottomSheetDialog2.findViewById(R.id.btn);
-//                    btn.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            activity.setText("lightly");
-//                            bottomSheetDialog2.dismiss();
-//                        }
-//                    });
                     RadioGroup group = bottomSheetDialog2.findViewById(R.id.group);
                     group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
                             switch (checkedId) {
-                                case R.id.sedentary:
-                                    activity.setText("sedentary");
+                                case R.id.radio1:
+                                    activity.setText("Sedentary");
                                     bottomSheetDialog2.dismiss();
                                     break;
-                                case R.id.lightly:
-                                    activity.setText("lightly");
+                                case R.id.radio2:
+                                    activity.setText("Lightly");
                                     bottomSheetDialog2.dismiss();
                                     break;
-                                case R.id.moderately:
-                                    activity.setText("moderately");
+                                case R.id.radio3:
+                                    activity.setText("Moderately");
                                     bottomSheetDialog2.dismiss();
                                     break;
                             }
                         }
                     });
-//                    RadioButton sedentary = bottomSheetDialog2.findViewById(R.id.sedentary);
-//                    RadioButton lightly = bottomSheetDialog2.findViewById(R.id.lightly);
-//                    RadioButton moderately = bottomSheetDialog2.findViewById(R.id.moderately);
-                    activity = findViewById(R.id.activity);
-                    update2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
 
-
-                        }
-//                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-//                                @Override
-//                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                                    switch (checkedId){
-//                                        case R.id.sedentary:
-//                                            activity.setText("sedentary");
-//                                            bottomSheetDialog2.dismiss();
-//                                            break;
-//                                        case R.id.lightly:
-//                                            activity.setText("lightly");
-//                                            bottomSheetDialog2.dismiss();
-//                                            break;
-//                                        case R.id.moderately:
-//                                            activity.setText("moderately");
-//                                            bottomSheetDialog2.dismiss();
-//                                            break;
-//                                    }
-//                                }
-//                            });
-//                    }
-                    });
                     bottomSheetDialog2.show();
                     break;
 
+                case R.id.genderBtn:
+                    BottomSheetDialog bottomSheetDialog3 = new BottomSheetDialog(ProfileActivity.this);
+                    bottomSheetDialog3.setContentView(R.layout.row_add_item3);
+
+                    RadioGroup group1 = bottomSheetDialog3.findViewById(R.id.group);
+
+
+                    group1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId) {
+                                case R.id.radio1:
+                                    gender.setText("Male");
+                                    bottomSheetDialog3.dismiss();
+                                    break;
+                                case R.id.radio2:
+                                    gender.setText("Female");
+                                    bottomSheetDialog3.dismiss();
+                                    break;
+
+                            }
+                        }
+                    });
+
+                    bottomSheetDialog3.show();
+                    break;
+
+                case R.id.yearBtn:
+                    BottomSheetDialog bottomSheetDialog4 = new BottomSheetDialog(ProfileActivity.this);
+                    bottomSheetDialog4.setContentView(R.layout.row_add_item);
+
+                    EditText newYear = bottomSheetDialog4.findViewById(R.id.newValue);
+                    newYear.setText("2000");
+                    TextView title1 = bottomSheetDialog4.findViewById(R.id.title);
+                    title1.setText("Key in Your Birth Year");
+                    TextView unit1 = bottomSheetDialog4.findViewById(R.id.unit);
+                    unit1.setText("");
+                    Button update2 = bottomSheetDialog4.findViewById(R.id.update);
+
+                    update2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!TextUtils.isEmpty(newYear.getText().toString())) {
+                                String value = newYear.getText().toString();
+                                year.setText(value);
+                                bottomSheetDialog4.dismiss();
+                            } else {
+                                Toast.makeText(v.getContext(), "Value required", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    bottomSheetDialog4.show();
+                    break;
+
+                case R.id.resetPassword:
+                    Intent intent1 = new Intent(ProfileActivity.this, ResetPasswordActivity.class);
+                    startActivity(intent1);
+
+                case R.id.save:
+                    break;
                 default:
                     break;
             }
@@ -206,91 +239,67 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-}
-//
-//    private void setButtons() {
-//
-//        heightBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ProfileActivity.this);
-//                bottomSheetDialog.setContentView(R.layout.row_add_item);
-//
-//                EditText newValue = bottomSheetDialog.findViewById(R.id.newValue);
-//                Button update = bottomSheetDialog.findViewById(R.id.update);
-//
-//                update.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (!TextUtils.isEmpty(newValue.getText().toString())) {
-//                            String value = newValue.getText().toString();
-//                            height.setText(value);
-//                            bottomSheetDialog.dismiss();
-//                        } else {
-//                            Toast.makeText(v.getContext(), "Value required", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//                bottomSheetDialog.show();
-//            }
-//        });
-//    }
 
-//    //set the drawer
-//    @Override
-//    public void onBackPressed(){
-//        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-//            drawerLayout.closeDrawer(GravityCompat.START);
-//        }else{
-//            super.onBackPressed();
-//        }
-//    }
-//
-//    private void navigationDrawer() {
-//        //Navigation Drawer
-//        navigationView.bringToFront();
-//        navigationView.setNavigationItemSelectedListener(this);
-//        navigationView.setCheckedItem(R.id.nav_home);
-//
-//        menuIcon.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View v) {
-//                if(drawerLayout.isDrawerVisible(GravityCompat.START)){
-//                    drawerLayout.closeDrawer(GravityCompat.START);
-//                }else {
-//                    drawerLayout.openDrawer(GravityCompat.START);
-//                }
-//            }
-//        });
-//    }
-//
-//
-//    //set the item in menu bar
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
-//        switch (menuItem.getItemId()){
-//            case R.id.nav_home:
-//                Intent intent0 = new Intent(ProfileActivity.this, MainActivity.class);
-//                startActivity(intent0);
-//                break;
-//            case R.id.nav_profile:
-//                break;
-//            case R.id.nav_plan:
-//                Intent intent1 = new Intent(ProfileActivity.this, PlanActivity.class);
-//                startActivity(intent1);
-//                break;
-//            case R.id.nav_reminders:
-//                Intent intent2 = new Intent(ProfileActivity.this, ReminderActivity.class);
-//                startActivity(intent2);
-//                break;
-//            case R.id.nav_share:
-//                Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.nav_rate:
-//                break;
-//        }
-//        drawerLayout.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
+    //set the drawer
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void navigationDrawer() {
+        //Navigation Drawer
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
+
+        menuIcon.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+    }
+
+
+    //set the item in menu bar
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_home:
+                Intent intent0 = new Intent(this, MainActivity.class);
+                startActivity(intent0);
+                break;
+            case R.id.nav_profile:
+                break;
+            case R.id.nav_plan:
+                Intent intent1 = new Intent(this, PlanActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.nav_reminders:
+                Intent intent2 = new Intent(this, ReminderActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.nav_share:
+                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_rate:
+                break;
+            case R.id.nav_logout:
+                Intent intent4 = new Intent(this, FlashActivity.class);
+                startActivity(intent4);
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+}
 

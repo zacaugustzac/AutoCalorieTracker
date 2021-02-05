@@ -34,17 +34,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = null;
         switch (view.getId()) {
             case R.id.signIn:
-                intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.signUp:
-                intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.forgotpsw:
-                intent = new Intent(LoginActivity.this, EmailActivity.class);
+                intent = new Intent(this, EmailActivity.class);
                 startActivity(intent);
                 break;
 

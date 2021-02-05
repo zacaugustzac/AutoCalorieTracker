@@ -190,25 +190,30 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_home:
-                Intent intent0 = new Intent(HistoryActivity.this, MainActivity.class);
+                Intent intent0 = new Intent(this, MainActivity.class);
                 startActivity(intent0);
                 break;
             case R.id.nav_profile:
-                Intent intent1 = new Intent(HistoryActivity.this, ProfileActivity.class);
+                Intent intent1 = new Intent(this, ProfileActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.nav_plan:
-                Intent intent2 = new Intent(HistoryActivity.this, PlanActivity.class);
+                Intent intent2 = new Intent(this, PlanActivity.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_reminders:
-                Intent intent3 = new Intent(HistoryActivity.this, ReminderActivity.class);
+                Intent intent3 = new Intent(this, ReminderActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.nav_share:
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_rate:
+                break;
+
+            case R.id.nav_logout:
+                Intent intent4 = new Intent(this, FlashActivity.class);
+                startActivity(intent4);
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

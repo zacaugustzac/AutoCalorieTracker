@@ -161,6 +161,10 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.nav_rate:
                 break;
+            case R.id.nav_logout:
+                Intent intent3 = new Intent(this, FlashActivity.class);
+                startActivity(intent3);
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

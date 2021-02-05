@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Select in Your Activity Level"
+        android:text="Select in Your Gender"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="Sedentary">
+            android:text="Male">
         </RadioButton>
 
         <RadioButton
@@ -38,15 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="Lightly">
+            android:text="Female">
         </RadioButton>
 
-        <RadioButton
-            android:id="@+id/radio3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Moderately">
-        </RadioButton>
     </RadioGroup>
 
 <!--    <Button-->
