@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             axisValuesForX.add(tempAxisValue);
         }
 
-        for (int i = 0; i <= 2000; i += 200){
+        for (int i = 0; i <= 3000; i += 500){
             tempAxisValue = new AxisValue(i);
             tempAxisValue.setLabel(i+"");
             axisValuesForY.add(tempAxisValue);
