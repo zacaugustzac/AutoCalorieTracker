@@ -3,6 +3,7 @@ package iss.edu.sg.autocalorietracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -13,9 +14,15 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,9 +42,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.TimeZone;
 import java.time.LocalDate;
 import java.text.DateFormat;
@@ -53,6 +67,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private ArrayList<Item> mItemList;
     private ArrayList<Item> mItemList2;
 
+    private String ROOT_URL_delete;
+    private String ROOT_URL_recommend;
+    private String ROOT_URL_history ;
     //variables for menu
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -69,6 +86,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        ROOT_URL_delete = "http://"+getString(R.string.address)+":8080/history/deleteImage/";
+        ROOT_URL_recommend = "http://"+getString(R.string.address)+":8080/api/food/getSuggestion?remainder=";
+        ROOT_URL_history = "http://"+getString(R.string.address)+":8080/history/getTodayHistory?date=";
 
         datenow = findViewById(R.id.editDate);
         datenow.setText("" + LocalDate.now());
@@ -105,7 +126,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-
     }
 
     public void buildRecyclerView() {
@@ -113,7 +133,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         mRecyclerView = findViewById(R.id.GridView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new Adapter(mItemList);
+        mAdapter = new Adapter(mItemList,this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -124,13 +144,22 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 Item a= mItemList.get(position);
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                Uri picUri = Uri.parse(a.getImage());
-                System.out.println(a.getImage());
-                //"https://images.deliveryhero.io/image/fd-sg/Products/5514328.jpg?width=302"
-                //.replace("localhost:8080","10.0.2.2:8080");
+                String address = getString(R.string.address);
+                String imageurl=a.getImage().replace("localhost:8080",address+":8080");
+                File img=downloadSharedImage(imageurl);
+
+                Uri picUri= FileProvider.getUriForFile(HistoryActivity.this,"iss.edu.sg.autocalorietracker",img);
                 shareIntent.putExtra(Intent.EXTRA_STREAM,picUri);
                 shareIntent.setType("image/png");
-                startActivity(Intent.createChooser(shareIntent, "Send To"));
+
+                Intent chooser=Intent.createChooser(shareIntent, "Send To");
+                List<ResolveInfo> resInfoList = HistoryActivity.this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    HistoryActivity.this.grantUriPermission(packageName, picUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
+
+                startActivity(chooser);
 
             }
 
@@ -164,7 +193,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         mRecyclerView2 = findViewById(R.id.GridView2);
         mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
         mRecyclerView2.setHasFixedSize(true);
-        mAdapter2 = new Adapter2(mItemList2);
+        mAdapter2 = new Adapter2(mItemList2,this);
         mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setAdapter(mAdapter2);
     }
@@ -236,7 +265,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
     public void deleteImage(Long id, int position) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/history/deleteImage/" + id;
+        String url = ROOT_URL_delete + id;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -256,7 +285,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
     public void showRecommendation(double remainder) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/api/food/getSuggestion?remainder=" + remainder;
+        String url = ROOT_URL_recommend + remainder;
         System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -293,10 +322,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         queue.add(stringRequest);
     }
 
-
     public void retrieveItemList(LocalDate date, String email) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/history/getTodayHistory?date=" + date + "&email=" + email;
+        String url = ROOT_URL_history + date + "&email=" + email;
         System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -345,6 +373,41 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
             }
         });
         queue.add(stringRequest);
+    }
+
+    public File downloadSharedImage(String url){
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String imagename=url.split("/image/")[1];
+        File file = new File(directory, imagename);
+        storeImageInStorage(url, file);
+        return file;
+    }
+
+    public void storeImageInStorage(String imgurl, File file) {
+        Log.d("path", file.toString());
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            convertImage(imgurl).compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Bitmap convertImage(String url) throws IOException {
+        System.out.println(url);
+        URL urlimg = new URL(url);
+        URLConnection conn = urlimg.openConnection();
+        conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+        conn.connect();
+        InputStream in = conn.getInputStream();
+        Bitmap bitmap = BitmapFactory.decodeStream(in);
+        in.close();
+        return bitmap;
+
     }
 
 

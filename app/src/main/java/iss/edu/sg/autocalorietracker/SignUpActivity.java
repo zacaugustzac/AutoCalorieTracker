@@ -35,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextView w1, w2, w3, h1, h2, h3;
     private RadioGroup radioGroup, radioWeight, radioHeight;
     private Button save, signIn;
+    private String ROOT_URL ;
 
     private TextInputLayout email;
     private TextInputLayout password;
@@ -51,6 +52,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         radioGroup = findViewById(R.id.radioGroup);
         radioWeight = findViewById(R.id.radioWeight);
         radioHeight = findViewById(R.id.radioHeight);
+
+        ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/register";
 
         w1 = findViewById(R.id.w1);
         w2 = findViewById(R.id.w2);
@@ -197,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        String url = "http://10.0.2.2:8080/api/user/register";
+        String url = ROOT_URL;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override

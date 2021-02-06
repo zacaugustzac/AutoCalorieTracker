@@ -1,5 +1,6 @@
 package iss.edu.sg.autocalorietracker;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import java.util.ArrayList;
 
 public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
     private ArrayList<Item> mItemList2;
+    Context con;
 
-    public Adapter2(ArrayList<Item> exampleList) {
+    public Adapter2(ArrayList<Item> exampleList, Context con) {
         mItemList2 = exampleList;
+        this.con=con;
     }
 
 
@@ -50,7 +53,8 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
         URL url = null;
         try {
             String imageurl=currentItem.getImage();
-            imageurl=imageurl.replace("localhost:8080","10.0.2.2:8080");
+            String address = con.getString(R.string.address);
+            imageurl=imageurl.replace("localhost:8080",address+":8080");
             url = new URL(imageurl);
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             holder.image.setImageBitmap(bmp);

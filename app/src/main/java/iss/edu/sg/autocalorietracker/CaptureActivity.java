@@ -51,9 +51,7 @@ import java.util.Map;
 
 public class CaptureActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-//    private static String ipaddress="192.168.10.141";
-//    private static final String ROOT_URL = "http://"+ipaddress+":8080/api/image/predict";
-    private static final String ROOT_URL = "http://10.0.2.2:8080/api/image/predict"; //for android emulator
+    private String ROOT_URL;
     private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST =1 ;
     private Bitmap bitmap;
@@ -78,6 +76,8 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
+        ROOT_URL = "http://"+getString(R.string.address)+":8080/api/image/predict";
+
         drawerLayout =findViewById(R.id.drawer_layout);
         drawerLayout =findViewById(R.id.drawer_layout);
         navigationView =findViewById(R.id.nav_view);

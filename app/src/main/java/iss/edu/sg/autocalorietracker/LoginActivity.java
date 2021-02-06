@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout passfield;
     private TextView resultTextView;
     private CheckBox remembercheck;
+    private String ROOT_URL ;
+
 
 
     @Override
@@ -42,6 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signIn = findViewById(R.id.signIn);
         signUp = findViewById(R.id.signUp);
         setListeners();
+
+        ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/authenticate";
 
         emailfield=findViewById(R.id.email);
         passfield=findViewById(R.id.password);
@@ -71,9 +75,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         Intent intent = null;
+        String em=emailfield.getEditText().getText().toString();
         switch (view.getId()) {
             case R.id.signIn:
-                String em=emailfield.getEditText().getText().toString();
                 String pass=passfield.getEditText().getText().toString();
                 submitLogin(em, pass);
                 break;
@@ -85,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.forgotpsw:
                 intent = new Intent(LoginActivity.this, EmailActivity.class);
+                intent.putExtra("email",em);
                 startActivity(intent);
                 break;
 
@@ -127,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        String url = "http://10.0.2.2:8080/api/user/authenticate";
+        String url = ROOT_URL;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override

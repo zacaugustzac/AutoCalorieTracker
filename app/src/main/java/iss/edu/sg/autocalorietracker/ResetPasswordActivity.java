@@ -8,22 +8,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class ResetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputLayout;
+
+public class ResetPasswordActivity extends AppCompatActivity {
     private Button reset;
+    private TextInputLayout emailfield;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO implement the backend part
+        Intent intent=getIntent();
+        String email=intent.getStringExtra("email");
+        reset =findViewById(R.id.reset);
+        if(email!=null){
+            emailfield.getEditText().setText(email);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-        reset =findViewById(R.id.reset);
-        reset.setOnClickListener(this);
+        reset.setOnClickListener(v-> {
+                //resetPass(email);
+            });
     }
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(ResetPasswordActivity.this,"Saved!",Toast.LENGTH_SHORT).show();
-        Intent intent = null;
-        intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-        startActivity(intent);
-    }
+
+
 }
