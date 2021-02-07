@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView resultTextView;
     private CheckBox remembercheck;
     private String ROOT_URL ;
+    private String keywordpass="passTemp";
 
 
 
@@ -139,20 +140,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onResponse(JSONObject response) {
                             try {
                                 System.out.println("response successfully");
+                                String pass = response.getString("password");
+                                String email = response.getString("email");
+                                if(pass.contains(keywordpass)){
+                                    Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                                    intent.putExtra("email",email);
+                                    startActivity(intent);
+                                }else {
+                                    double calorierec = response.getDouble("recommendedCalories");
+                                    System.out.println("email= " + email);
+                                    SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("password", pass);
+                                    editor.putFloat("calorie", (float) calorierec);
+                                    editor.putString("email", email);
+                                    editor.commit();
 
-                                double calorierec=response.getDouble("recommendedCalories");
-                                String email=response.getString("email");
-                                String pass=response.getString("password");
-                                System.out.println("email= "+email);
-                                SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor=sharedPref.edit();
-                                editor.putString("password",pass);
-                                editor.putFloat("calorie",(float)calorierec);
-                                editor.putString("email",email);
-                                editor.commit();
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
