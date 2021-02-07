@@ -40,7 +40,7 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.suggestionsitem, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.planitem, parent, false);
         ViewHolder evh = new ViewHolder(v);
         return evh;
     }
