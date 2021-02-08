@@ -89,6 +89,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         Intent intent=getIntent();
         Long currentDate=intent.getLongExtra("date",System.currentTimeMillis());
         LocalDate date = Instant.ofEpochMilli(currentDate).atZone(ZoneId.systemDefault()).toLocalDate();
+        datenow.setText("" + date);
 
         //Navigation Drawer Menu
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
