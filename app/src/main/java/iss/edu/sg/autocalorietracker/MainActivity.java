@@ -41,6 +41,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -81,9 +82,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ComboLineColumnChartView chart;
     private ComboLineColumnChartData data;
-    List<Integer> calorieHistory = new ArrayList<>();
+    private List<Integer> calorieHistory = new ArrayList<>();
     private TextView textChartDateRangeView;
-    LocalDate lastDayForChart = LocalDate.now();
+    private LocalDate lastDayForChart = LocalDate.now();
+    private double userRecommendedCalories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //get data from db and draw chart
 //        lastDayForChart = LocalDate.of(2021,2,6);//temp
         System.out.println(lastDayForChart);
-        getDataFromDB(lastDayForChart, useremail);
+        getUserFromDB(useremail);
+        getCaloriesFromDB(lastDayForChart, useremail);
 
         //hooks
         drawerLayout =findViewById(R.id.drawer_layout);
@@ -117,7 +120,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationDrawer();
     }
 
-    public void getDataFromDB(LocalDate date, String useremail){
+    public void getUserFromDB(String useremail){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url="http://10.0.2.2:8080/weekly/getUser?email=" + useremail;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("USER Response: "+ response);
+                        try {
+                            JSONObject result = new JSONObject(response);
+                            userRecommendedCalories = result.getDouble("recommendedCalories");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(MainActivity.this,"User Retrieved successfully "+ userRecommendedCalories,Toast.LENGTH_SHORT).show();
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(MainActivity.this, "User Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void getCaloriesFromDB(LocalDate date, String useremail){
         textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
         RequestQueue queue = Volley.newRequestQueue(this);
         String url="http://10.0.2.2:8080/weekly/getDailyCalories?date=" + date + "&email=" + useremail;
@@ -309,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Recommended Line
         List<PointValue> values = new ArrayList<>();
         for (int k = 0; k < 7; ++k) {
-            values.add(new PointValue(k, 1400));
+            values.add(new PointValue(k, (float)userRecommendedCalories));
         }
         Line line = new Line(values);
         line.setColor(ChartUtils.COLORS[1]);
