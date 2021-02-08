@@ -113,22 +113,21 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     @Override
                     public void onResponse(String response) {
                         System.out.println("Response is: " + response.toString());
-                        JSONArray result = null;
+                        JSONObject result = null;
 
                         try {
-                            result = new JSONArray(response);
+                            result = new JSONObject(response);
 
-                                JSONObject ans = result.getJSONObject(1);
-                                String emailVal = ans.getJSONObject("user").getString("email");
-                                email.setText(emailVal);
-                                String genderVal = ans.getJSONObject("user").getString("gender");
-                                gender.setText(genderVal);
-                                String yearVal = ans.getJSONObject("user").getString("year");
-                                year.setText(yearVal);
-                                String heightVal = ans.getJSONObject("user").getString("height");
-                                height.setText(heightVal);
-                                String weightVal = ans.getJSONObject("user").getString("weight");
-                                weight.setText(weightVal);
+                            String emailVal = result.getString("email");
+                            email.setText(emailVal);
+                            String genderVal = result.getString("gender");
+                            gender.setText(genderVal);
+                            String yearVal = result.getString("birthYear");
+                            year.setText(yearVal);
+                            String heightVal = result.getString("height");
+                            height.setText(heightVal);
+                            String weightVal = result.getString("weight");
+                            weight.setText(weightVal);
 
 
                         } catch (JSONException e) {
@@ -169,6 +168,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog.setContentView(R.layout.row_add_item);
 
                     EditText newHeight = bottomSheetDialog.findViewById(R.id.newValue);
+                    newHeight.setText(height.getText());
                     Button update = bottomSheetDialog.findViewById(R.id.update);
 
                     update.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +191,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog1.setContentView(R.layout.row_add_item);
 
                     EditText newWeight = bottomSheetDialog1.findViewById(R.id.newValue);
-                    newWeight.setText("55");
+                    newWeight.setText(weight.getText());
                     TextView title = bottomSheetDialog1.findViewById(R.id.title);
                     title.setText("Key in Your Weight Value");
                     TextView unit = bottomSheetDialog1.findViewById(R.id.unit);
@@ -274,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog4.setContentView(R.layout.row_add_item);
 
                     EditText newYear = bottomSheetDialog4.findViewById(R.id.newValue);
-                    newYear.setText("2000");
+                    newYear.setText(year.getText());
                     TextView title1 = bottomSheetDialog4.findViewById(R.id.title);
                     title1.setText("Key in Your Birth Year");
                     TextView unit1 = bottomSheetDialog4.findViewById(R.id.unit);
@@ -301,15 +301,17 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     startActivity(intent1);
 
                 case R.id.save:
-                    String genderval = gender.getText().toString();
-                    String yearval = year.getText().toString();
-                    String heightval = height.getText().toString();
-                    String weightval = weight.getText().toString();
-                    String activityval = activity.getText().toString();
+                    String emailVal = email.getText().toString();
+                    String genderVal = gender.getText().toString();
+                    String yearVal = year.getText().toString();
+                    String heightVal = height.getText().toString();
+                    String weightVal = weight.getText().toString();
+                    String activityVal = activity.getText().toString();
 
-                    Person p = new Person(genderval, yearval, heightval, weightval, activityval);
+                    Person p = new Person(emailVal, yearVal, activityVal, genderVal, heightVal, weightVal);
                     update(p);
 
+                    Toast.makeText(ProfileActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -323,6 +325,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         JSONObject object = new JSONObject();
         try {
             //input your API parameters
+            object.put("email", p.getEmail());
             object.put("birthYear", p.getYear());
             object.put("activityLevel", p.getActivity());
             object.put("gender", p.getGender());

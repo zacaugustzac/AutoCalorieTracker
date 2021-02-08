@@ -19,6 +19,15 @@ public class Person {
         this.avgweight=avgweight;
     }
 
+    public Person(String email, String year, String activity, String gender, String avgheight, String avgweight) {
+        this.email = email;
+        this.year = year;
+        this.activity = activity;
+        this.gender = gender;
+        this.avgheight = avgheight;
+        this.avgweight = avgweight;
+    }
+
     public Person(String year, String activity, String gender, String avgheight, String avgweight) {
         this.year = year;
         this.activity = activity;
