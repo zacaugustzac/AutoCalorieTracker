@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,30 +25,22 @@ public class EmailActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_email);
         ROOT_URL = "http://"+getString(R.string.address)+":8080/api/user/reset?email=";
         //TODO implement the backend part
         Intent intent=getIntent();
         String email=intent.getStringExtra("email");
-        emailfield=findViewById(R.id.email);
+        sendEmail=findViewById(R.id.sentEmail);
+        sendEmail.setOnClickListener(this);
+        emailfield=findViewById(R.id.emailspace);
         if(email!=null){
             emailfield.getEditText().setText(email);
         }
-        sendEmail=findViewById(R.id.email);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
 
-        sendEmail.setOnClickListener(v-> {
-            resetPass(email);
-        });
-    }
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(EmailActivity.this,"Email sent!",Toast.LENGTH_SHORT).show();
-        Intent intent = null;
-        intent = new Intent(EmailActivity.this, ResetPasswordActivity.class);
-        startActivity(intent);
+
+
     }
 
     public void resetPass(String email){
@@ -69,6 +62,15 @@ public class EmailActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(EmailActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
             }
         });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v==sendEmail){
+            String email=emailfield.getEditText().getText().toString();
+            resetPass(email);
+        }
     }
 }

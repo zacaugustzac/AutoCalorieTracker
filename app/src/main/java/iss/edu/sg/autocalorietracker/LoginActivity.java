@@ -64,6 +64,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             remembercheck.setChecked(true);
         }
 
+        Intent in=getIntent();
+        String email=in.getStringExtra("email");
+        if(email!=null){
+            emailfield.getEditText().setText(email);
+        }
+
     }
 
     private void setListeners() {

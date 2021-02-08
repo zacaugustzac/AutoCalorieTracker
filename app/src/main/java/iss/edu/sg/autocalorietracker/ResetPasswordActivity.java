@@ -30,7 +30,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO implement the backend part
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reset_password);
         ROOT_URL="http://"+getString(R.string.address)+":8080/api/user/resetPass";
         Intent intent=getIntent();
         String email=intent.getStringExtra("email");
@@ -40,8 +41,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         passfield=findViewById(R.id.password);
         confirmfield=findViewById(R.id.confirm_password);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
         reset.setOnClickListener(v-> {
             String pass=passfield.getEditText().getText().toString();
             String conpass=confirmfield.getEditText().getText().toString();
@@ -74,6 +73,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         System.out.println("response successfully");
                         Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                        intent.putExtra("email",email);
                         startActivity(intent);
                     }
                 }, new Response.ErrorListener() {
