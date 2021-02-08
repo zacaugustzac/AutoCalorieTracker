@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private double userRecommendedCalories;
     private Button nextWeekButton;
     private Button lastWeekButton;
+    private String useremail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //get email
         SharedPreferences sharedPref=getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        String useremail=sharedPref.getString("email",null);
+        useremail=sharedPref.getString("email",null);
 
         //get data from db and draw chart
         lastDayForChart = LocalDate.now();
@@ -271,8 +272,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View v) {
-            Intent intent= new Intent(this,CaptureActivity.class);
+        if (v == photoIcon) {
+            Intent intent = new Intent(this, CaptureActivity.class);
             startActivity(intent);
+        } else if (v == lastWeekButton){
+            lastDayForChart = lastDayForChart.minusDays(7);//change last day for chart
+            getCaloriesFromDB(lastDayForChart,useremail);//update chart
+            checkNextWeekButton(lastDayForChart);//update nextweekbutton
+        } else if (v == nextWeekButton){
+            lastDayForChart = lastDayForChart.plusDays(7); //change last day for chart
+            getCaloriesFromDB(lastDayForChart,useremail); //update chart
+            checkNextWeekButton(lastDayForChart); //update nextweekbutton
+        }
     }
 
 
@@ -414,18 +425,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            Toast.makeText(MainActivity.this, "Selected column: " + value, Toast.LENGTH_SHORT).show();
-
             LocalDate[] listOfDates = new LocalDate[7];
             for (int i=0; i<7;i++){
                 listOfDates[i] = lastDayForChart.minusDays(6-i);
             }
-            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+
 
             //change to long epochMillis
             Instant instant = listOfDates[columnIndex].atStartOfDay(ZoneId.systemDefault()).toInstant();
             Long timeInMillis = instant.toEpochMilli();
 
+            //send intent
+            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
             intent.putExtra("date",timeInMillis);
             System.out.println("listOfDates[columnIndex]" + listOfDates[columnIndex]);
             startActivity(intent);
