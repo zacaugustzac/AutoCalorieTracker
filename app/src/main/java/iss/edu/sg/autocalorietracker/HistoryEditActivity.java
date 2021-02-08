@@ -27,6 +27,7 @@ public class HistoryEditActivity extends AppCompatActivity {
     public EditText foodName;
     public EditText foodCal;
     public Button saveButton;
+    private String ROOT_URL ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,11 @@ public class HistoryEditActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Item item=(Item) intent.getSerializableExtra("item");
         foodPic =findViewById(R.id.imageView);
+        ROOT_URL= "http://"+getString(R.string.address)+":8080/history/updateImage?id=";
         URL url = null;
         try {
-            url = new URL(item.getImage().replace("localhost:8080","10.0.2.2:8080"));
+            String address = getString(R.string.address);
+            url = new URL(item.getImage().replace("localhost:8080",address+":8080"));
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             foodPic.setImageBitmap(bmp);
         } catch (MalformedURLException e) {
@@ -63,7 +66,7 @@ public class HistoryEditActivity extends AppCompatActivity {
         String calorie=foodCal.getText().toString();
         //TODO should we consider post for this??
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/history/updateImage?id=" + id + "&name=" + name+ "&calorie=" + calorie;
+        String url = ROOT_URL + id + "&name=" + name+ "&calorie=" + calorie;
         System.out.println("url=" + url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {

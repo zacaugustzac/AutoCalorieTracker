@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout emailfield;
     private TextInputLayout passfield;
     private TextView resultTextView;
+    private CheckBox remembercheck;
+    private String ROOT_URL ;
+    private String keywordpass="passTemp";
+
 
 
     @Override
@@ -41,9 +46,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signUp = findViewById(R.id.signUp);
         setListeners();
 
+        ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/authenticate";
+
         emailfield=findViewById(R.id.email);
         passfield=findViewById(R.id.password);
         resultTextView=findViewById(R.id.result);
+        remembercheck=findViewById(R.id.checkbox_remember);
+
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        String remember=sharedPref.getString("remember","no");
+
+        if(remember.contentEquals("yes")){
+            String email=sharedPref.getString("email",null);
+            String password=sharedPref.getString("password",null);
+            emailfield.getEditText().setText(email);
+            passfield.getEditText().setText(password);
+            remembercheck.setChecked(true);
+        }
+
+        Intent in=getIntent();
+        String email=in.getStringExtra("email");
+        if(email!=null){
+            emailfield.getEditText().setText(email);
+        }
 
     }
 
@@ -57,9 +82,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         Intent intent = null;
+        String em=emailfield.getEditText().getText().toString();
         switch (view.getId()) {
             case R.id.signIn:
-                String em=emailfield.getEditText().getText().toString();
                 String pass=passfield.getEditText().getText().toString();
                 submitLogin(em, pass);
                 break;
@@ -71,10 +96,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.forgotpsw:
                 intent = new Intent(LoginActivity.this, EmailActivity.class);
+                intent.putExtra("email",em);
                 startActivity(intent);
                 break;
 
             default:
+                break;
+        }
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPref.edit();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_remember:
+                if (checked){
+                    editor.putString("remember","yes");
+                    editor.commit();
+                }
+                // Put some meat on the sandwich
+            else{
+                    editor.putString("remember","no");
+                    editor.commit();
+            }
+                // Remove the meat
                 break;
         }
     }
@@ -90,25 +139,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        String url = "http://10.0.2.2:8080/api/user/authenticate";
+        String url = ROOT_URL;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                             try {
                                 System.out.println("response successfully");
+                                String pass = response.getString("password");
+                                String email = response.getString("email");
+                                if(pass.contains(keywordpass)){
+                                    Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                                    intent.putExtra("email",email);
+                                    startActivity(intent);
+                                }else {
+                                    double calorierec = response.getDouble("recommendedCalories");
+                                    System.out.println("email= " + email);
+                                    SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("password", pass);
+                                    editor.putFloat("calorie", (float) calorierec);
+                                    editor.putString("email", email);
+                                    editor.commit();
 
-                                double calorierec=response.getDouble("recommendedCalories");
-                                String email=response.getString("email");
-                                System.out.println("email= "+email);
-                                SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor=sharedPref.edit();
-                                editor.putFloat("calorie",(float)calorierec);
-                                editor.putString("email",email);
-                                editor.commit();
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

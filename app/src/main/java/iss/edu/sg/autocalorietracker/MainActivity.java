@@ -192,21 +192,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 break;
             case R.id.nav_profile:
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(this, ProfileActivity.class);
                 startActivity(intent);
                 break;
             case R.id.nav_plan:
-                Intent intent1 = new Intent(MainActivity.this, PlanActivity.class);
+                Intent intent1 = new Intent(this, PlanActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.nav_reminders:
-                Intent intent2 = new Intent(MainActivity.this, RemindersActivity.class);
+                Intent intent2 = new Intent(this, ReminderActivity.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_share:
                 Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_rate:
+                break;
+            case R.id.nav_logout:
+                Intent intent3 = new Intent(this, FlashActivity.class);
+                startActivity(intent3);
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
