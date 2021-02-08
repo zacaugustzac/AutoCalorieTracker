@@ -7,8 +7,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,10 +26,25 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //variables for menu
@@ -36,7 +54,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private ImageView menuIcon;
     private ImageButton yearBtn, genderBtn, heightBtn, weightBtn, activityBtn;
     private Button resetPassword, save;
-    private TextView height, weight, activity, year, gender;
+    private TextView email, height, weight, activity, year, gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +73,19 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         genderBtn = findViewById(R.id.genderBtn);
         resetPassword = findViewById(R.id.resetPassword);
         save = findViewById(R.id.save);
+        email = findViewById(R.id.email);
         height = findViewById(R.id.height);
         weight = findViewById(R.id.weight);
         activity = findViewById(R.id.activity);
         year = findViewById(R.id.year);
         gender = findViewById(R.id.gender);
+
+        SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String useremail = sharedPref.getString("email", null);
+
+        retrieveUser(useremail);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         setListeners();
 
@@ -75,6 +101,49 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         toggle.syncState();
 
         navigationDrawer();
+    }
+
+    private void retrieveUser(String useremail) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://10.0.2.2:8080/api/user/view?email=" + useremail;
+        System.out.println("url=" + url);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response is: " + response.toString());
+                        JSONObject result = null;
+
+                        try {
+                            result = new JSONObject(response);
+
+                            String emailVal = result.getString("email");
+                            email.setText(emailVal);
+                            String genderVal = result.getString("gender");
+                            gender.setText(genderVal);
+                            String yearVal = result.getString("birthYear");
+                            year.setText(yearVal);
+                            String heightVal = result.getString("height");
+                            height.setText(heightVal);
+                            String weightVal = result.getString("weight");
+                            weight.setText(weightVal);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(ProfileActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
     }
 
     private void setListeners() {
@@ -99,6 +168,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog.setContentView(R.layout.row_add_item);
 
                     EditText newHeight = bottomSheetDialog.findViewById(R.id.newValue);
+                    newHeight.setText(height.getText());
                     Button update = bottomSheetDialog.findViewById(R.id.update);
 
                     update.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +191,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog1.setContentView(R.layout.row_add_item);
 
                     EditText newWeight = bottomSheetDialog1.findViewById(R.id.newValue);
-                    newWeight.setText("55");
+                    newWeight.setText(weight.getText());
                     TextView title = bottomSheetDialog1.findViewById(R.id.title);
                     title.setText("Key in Your Weight Value");
                     TextView unit = bottomSheetDialog1.findViewById(R.id.unit);
@@ -204,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     bottomSheetDialog4.setContentView(R.layout.row_add_item);
 
                     EditText newYear = bottomSheetDialog4.findViewById(R.id.newValue);
-                    newYear.setText("2000");
+                    newYear.setText(year.getText());
                     TextView title1 = bottomSheetDialog4.findViewById(R.id.title);
                     title1.setText("Key in Your Birth Year");
                     TextView unit1 = bottomSheetDialog4.findViewById(R.id.unit);
@@ -231,12 +301,55 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     startActivity(intent1);
 
                 case R.id.save:
+                    String emailVal = email.getText().toString();
+                    String genderVal = gender.getText().toString();
+                    String yearVal = year.getText().toString();
+                    String heightVal = height.getText().toString();
+                    String weightVal = weight.getText().toString();
+                    String activityVal = activity.getText().toString();
+
+                    Person p = new Person(emailVal, yearVal, activityVal, genderVal, heightVal, weightVal);
+                    update(p);
+
+                    Toast.makeText(ProfileActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
 
         }
+    }
+
+    private void update(Person p) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JSONObject object = new JSONObject();
+        try {
+            //input your API parameters
+            object.put("email", p.getEmail());
+            object.put("birthYear", p.getYear());
+            object.put("activityLevel", p.getActivity());
+            object.put("gender", p.getGender());
+            object.put("weight", p.getAvgweight());
+            object.put("height", p.getAvgheight());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Enter the correct url for your api service site
+        String url = "http://10.0.2.2:8080/api/user/update";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("update successfully");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("update failed");
+
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
     }
 
 
@@ -301,5 +414,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
 
