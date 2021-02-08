@@ -53,6 +53,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -67,6 +68,7 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ComboLineColumnChartView;
 import lecho.lib.hellocharts.listener.ComboLineColumnChartOnValueSelectListener;
@@ -296,24 +298,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 daysOfTheWeek = new String[] {"M","T","W","T","F","S","S"};
                 break;
         }
+
         for (int i = 0; i <= 6; i += 1){
             tempAxisValue = new AxisValue(i);
             tempAxisValue.setLabel(daysOfTheWeek[i]);
             axisValuesForX.add(tempAxisValue);
         }
+        //round up to nearest 500 of either highest daily calorie or recommended calories
+        double top = (500*Math.ceil(Math.max(Collections.max(calorieHistory),userRecommendedCalories)/500));
 
-        for (int i = 0; i <= 3000; i += 500){
+        for (int i = 0; i <= top; i += 500){
             tempAxisValue = new AxisValue(i);
             tempAxisValue.setLabel(i+"");
             axisValuesForY.add(tempAxisValue);
         }
 
+        //set max y value, max x value, fixed viewport,
+        final Viewport v = new Viewport(chart.getMaximumViewport());
+        v.bottom = 0;
+        v.top = (float)top;
+        v.left = -0.5f;
+        v.right = 6.5f;
+
+
         Axis axisX = new Axis(axisValuesForX);
         Axis axisY = new Axis(axisValuesForY);
+
         data.setAxisXBottom(axisX);
         data.setAxisYLeft(axisY);
 
         chart.setComboLineColumnChartData(data);
+
+        chart.setMaximumViewport(v);
+        chart.setCurrentViewport(v);
+        chart.setViewportCalculationEnabled(false);
     }
 
     private LineChartData generateLineData() {
