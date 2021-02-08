@@ -44,7 +44,9 @@ import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -343,12 +345,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onColumnValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
 //            Toast.makeText(MainActivity.this, "Selected column: " + value, Toast.LENGTH_SHORT).show();
 
-            String[] listOfDates = new String[7];
+            LocalDate[] listOfDates = new LocalDate[7];
             for (int i=0; i<7;i++){
-                listOfDates[i] = lastDayForChart.minusDays(6-i).toString();
+                listOfDates[i] = lastDayForChart.minusDays(6-i);
             }
             Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-            intent.putExtra("date",listOfDates[columnIndex]);
+
+            //change to long epochMillis
+            Instant instant = listOfDates[columnIndex].atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Long timeInMillis = instant.toEpochMilli();
+
+            intent.putExtra("date",timeInMillis);
             System.out.println("listOfDates[columnIndex]" + listOfDates[columnIndex]);
             startActivity(intent);
         }
