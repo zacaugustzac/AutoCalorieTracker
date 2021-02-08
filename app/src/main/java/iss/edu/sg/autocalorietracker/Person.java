@@ -8,6 +8,7 @@ public class Person {
     String gender;
     String avgheight;
     String avgweight;
+    String reminderKcal;
 
     public Person(String email,String password,String year,String activity,String gender,String avgheight,String avgweight){
         this.email=email;
@@ -28,12 +29,9 @@ public class Person {
         this.avgweight = avgweight;
     }
 
-    public Person(String year, String activity, String gender, String avgheight, String avgweight) {
-        this.year = year;
-        this.activity = activity;
-        this.gender = gender;
-        this.avgheight = avgheight;
-        this.avgweight = avgweight;
+    public Person(String email, String reminderKcal) {
+        this.email = email;
+        this.reminderKcal = reminderKcal;
     }
 
     public String getEmail() {
@@ -62,5 +60,9 @@ public class Person {
 
     public String getAvgweight() {
         return avgweight;
+    }
+
+    public String getReminderKcal() {
+        return reminderKcal;
     }
 }

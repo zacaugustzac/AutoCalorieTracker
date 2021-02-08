@@ -192,6 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="85dp"
+                        android:checked="true"
                         android:text="Male"
                         android:textSize="18sp" />
 
@@ -240,6 +241,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="12dp"
+                    android:checked="true"
                     android:src="@drawable/male"
                     app:layout_constraintEnd_toStartOf="@+id/weight3"
                     app:layout_constraintStart_toEndOf="@+id/weight1"
@@ -260,9 +262,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="108dp"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="30dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.497"
                     app:layout_constraintStart_toStartOf="parent"
@@ -280,6 +282,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="35dp"
+                        android:checked="true"
                         android:text="60kg-75kg"
                         android:textSize="12sp" />
 
@@ -347,8 +350,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="100dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginTop="100dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.497"
@@ -368,6 +371,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
+                        android:checked="true"
                         android:text="160cm-175cm"
                         android:textSize="12sp" />
 

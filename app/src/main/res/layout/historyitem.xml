@@ -39,8 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="68dp"
                 android:layout_toRightOf="@+id/img"
                 android:fontFamily="@font/archivo_narrow_bold"
                 android:text="Egg(boild)"
@@ -53,15 +53,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/catalogue"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="68dp"
                 android:layout_toEndOf="@+id/img"
                 android:layout_toRightOf="@+id/img"
                 android:fontFamily="@font/archivo_narrow_bold"
                 android:text="78 kcal"
                 android:textSize="26sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/share"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.926" />
 
             <TextView
                 android:id="@+id/timestamp"
