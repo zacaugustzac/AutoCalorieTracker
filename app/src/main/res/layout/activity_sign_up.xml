@@ -73,6 +73,14 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/errmessage"
+                android:text="fields cannot be empty!"
+                android:textColor="@color/red"
+                android:visibility="gone"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

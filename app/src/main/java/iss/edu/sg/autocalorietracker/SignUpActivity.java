@@ -32,7 +32,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private Spinner year, level;
     private ImageView weight1, weight2, weight3, height1, height2, height3;
-    private TextView w1, w2, w3, h1, h2, h3;
+    private TextView w1, w2, w3, h1, h2, h3,error;
     private RadioGroup radioGroup, radioWeight, radioHeight;
     private Button save, signIn;
     private String ROOT_URL ;
@@ -52,6 +52,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         radioGroup = findViewById(R.id.radioGroup);
         radioWeight = findViewById(R.id.radioWeight);
         radioHeight = findViewById(R.id.radioHeight);
+
+        error=findViewById(R.id.errmessage);
 
         ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/register";
 
@@ -169,9 +171,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 String w= estimateWeight(genderval,weightval);
                 System.out.println(w);
 
-                Person p = new Person(mail,pass,yearval,activity,genderval,h,w);
-                register(p);
-                //Toast.makeText(SignUpActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                if(mail==null ||pass==null||mail.contentEquals("")||pass.contentEquals("")){
+                    error.setVisibility(View.VISIBLE);
+                }else{
+                    Person p = new Person(mail,pass,yearval,activity,genderval,h,w);
+                    register(p);
+                }
+
 
                 break;
             case R.id.signIn:
@@ -213,9 +219,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("registration error");
-                //resultTextView.setVisibility(View.VISIBLE);
-                //resultTextView.setText("Registration Failed");
-
+                Toast.makeText(SignUpActivity.this,"this account already Exists",Toast.LENGTH_LONG).show();
             }
         });
         requestQueue.add(jsonObjectRequest);
