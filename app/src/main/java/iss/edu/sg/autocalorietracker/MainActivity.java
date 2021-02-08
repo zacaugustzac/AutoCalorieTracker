@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String useremail=sharedPref.getString("email",null);
 
         //get data from db and draw chart
-//        lastDayForChart = LocalDate.of(2021,1,28);//temp
+//        lastDayForChart = LocalDate.of(2021,2,6);//temp
         System.out.println(lastDayForChart);
         getDataFromDB(lastDayForChart, useremail);
 
