@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getUserFromDB(useremail);
         getCaloriesFromDB(lastDayForChart, useremail);
         nextWeekButton = findViewById(R.id.NextWeekButton);
+        nextWeekButton.setOnClickListener(this);
         checkNextWeekButton(lastDayForChart);
         lastWeekButton = findViewById(R.id.LastWeekButton);
         lastWeekButton.setOnClickListener(this);
