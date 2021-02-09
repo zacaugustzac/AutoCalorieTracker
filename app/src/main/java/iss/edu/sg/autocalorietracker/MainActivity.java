@@ -1,7 +1,6 @@
 package iss.edu.sg.autocalorietracker;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,10 +10,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,37 +26,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
+
 import java.util.List;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -95,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Button lastWeekButton;
     private String useremail;
 
+    private String URL_RETRIEVEUSER;
+    private String URL_RETRIEVECALORIE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //get email
         SharedPreferences sharedPref=getSharedPreferences("user_data", Context.MODE_PRIVATE);
         useremail=sharedPref.getString("email",null);
+
+        URL_RETRIEVEUSER="http://" + getString(R.string.address) + ":8080/weekly/getUser?email=";
+        URL_RETRIEVECALORIE="http://" + getString(R.string.address) + ":8080/weekly/getDailyCalories?date=";
+
 
         //get data from db and draw chart
         lastDayForChart = LocalDate.now();
@@ -146,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getUserFromDB(String useremail){
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/weekly/getUser?email=" + useremail;
+        String url=URL_RETRIEVEUSER + useremail;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -173,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getCaloriesFromDB(LocalDate date, String useremail){
         textChartDateRangeView = findViewById(R.id.textChartDateRangeView);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url="http://10.0.2.2:8080/weekly/getDailyCalories?date=" + date + "&email=" + useremail;
+        String url=URL_RETRIEVECALORIE + date + "&email=" + useremail;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -184,11 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         for(String i : str){
                             calorieHistory.add(Integer.parseInt(i));
                         }
-                        try {
-                            Toast.makeText(MainActivity.this,"GOOD",Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putFloat("totalIntake", Float.valueOf(str[str.length-1]));
+                        editor.commit();
                         drawComboChart();
                         Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }

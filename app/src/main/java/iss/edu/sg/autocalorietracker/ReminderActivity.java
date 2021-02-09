@@ -40,13 +40,17 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
     private ImageView menuIcon;
     private Button save;
     private TextInputEditText kcal;
-    private String ROOT_URL;
+    private String UPDATE_ROOT_URL;
+    private String RetrieveURL;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
+
+        RetrieveURL="http://"+getString(R.string.address)+":8080/api/user/view?email=";
+        UPDATE_ROOT_URL = "http://" + getString(R.string.address) + ":8080/api/user/reminder";
 
         SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String useremail = sharedPref.getString("email", null);
@@ -67,6 +71,10 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
 
                 String emailVal = useremail;
                 String kcalVal = kcal.getText().toString();
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putFloat("threshold",Float.valueOf(kcalVal));
+                editor.commit();
+
                 kcal.setText(kcalVal);
                 Person p = new Person(emailVal, kcalVal);
                 update(p);
@@ -77,7 +85,7 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
         });
 
 
-        ROOT_URL = "http://" + getString(R.string.address) + ":8080/api/user/reminder";
+
 
 
         //tool bar
@@ -94,7 +102,7 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
 
     private void retrieveUser(String useremail) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/api/user/view?email=" + useremail;
+        String url = RetrieveURL + useremail;
         System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -140,7 +148,7 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        String url = ROOT_URL;
+        String url = UPDATE_ROOT_URL;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override

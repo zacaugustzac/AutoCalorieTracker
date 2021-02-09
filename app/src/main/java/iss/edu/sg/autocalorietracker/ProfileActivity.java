@@ -55,12 +55,16 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private ImageButton yearBtn, genderBtn, heightBtn, weightBtn, activityBtn;
     private Button resetPassword, save;
     private TextView email, height, weight, activity, year, gender;
+    private String UpdateURL;
+    private String RetrieveURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        UpdateURL="http://"+getString(R.string.address)+":8080/api/user/update";
+        RetrieveURL="http://"+getString(R.string.address)+":8080/api/user/view?email=";
         //hooks
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -105,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     private void retrieveUser(String useremail) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/api/user/view?email=" + useremail;
+        String url = RetrieveURL + useremail;
         System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -335,7 +339,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             e.printStackTrace();
         }
         // Enter the correct url for your api service site
-        String url = "http://10.0.2.2:8080/api/user/update";
+        String url = UpdateURL;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override

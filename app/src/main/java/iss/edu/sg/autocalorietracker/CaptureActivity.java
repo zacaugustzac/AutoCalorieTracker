@@ -5,12 +5,18 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -69,6 +75,9 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+
+    private static final String C_ID="88888";
+    private static final String C_NAME="channel for notif";
 
 
 
@@ -130,6 +139,38 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         navigationDrawer();
 
     }
+
+    private void createNotificationChannel(){
+        int importance= NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel= new NotificationChannel(C_ID,C_NAME,importance);
+        channel.setDescription("notification for the reminder of the app");
+
+        NotificationManager notifmanager=getSystemService(NotificationManager.class);
+        notifmanager.createNotificationChannel(channel);
+    }
+
+    private void createNotification(){
+
+        NotificationCompat.Builder builder= new  NotificationCompat.Builder(this,C_ID);
+
+        Intent intent= new Intent(this,HistoryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pi=PendingIntent.getActivity(this,0,intent,0);
+
+        builder.setSmallIcon(R.drawable.logo)
+                .setContentTitle("Reminder")
+                .setContentText("your calorie intake level today is close to the daily recommended intake")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(pi);
+        Notification notif=builder.build();
+
+        int notifid=111;
+        NotificationManagerCompat mgr=NotificationManagerCompat.from(this);
+        mgr.notify(notifid,notif);
+
+    }
+
     @Override
     public void onBackPressed(){
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -197,6 +238,16 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    private boolean closeToThreshold(double currentfood){
+        SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
+        Float threshold=sharedPref.getFloat("threshold",0);
+        Float cal=sharedPref.getFloat("calorie",0);
+        Float totalintake=sharedPref.getFloat("totalIntake",0);
+        if((cal-totalintake-currentfood)<threshold){
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -311,6 +362,10 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
                                     cal.setText(fcal+" cal");
                                     textView.setText("File Submitted");
                                     progress.setVisibility(View.INVISIBLE);
+                                    if(closeToThreshold(fcal)){
+                                        createNotificationChannel();
+                                        createNotification();
+                                    }
                                 }
                             });
                             //Toast.makeText(getApplicationContext(), name+" "+cal, Toast.LENGTH_SHORT).show();

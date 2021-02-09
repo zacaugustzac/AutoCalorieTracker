@@ -154,11 +154,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     startActivity(intent);
                                 }else {
                                     double calorierec = response.getDouble("recommendedCalories");
+                                    double calThreshold=response.getDouble("reminderCalories");
                                     System.out.println("email= " + email);
                                     SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPref.edit();
                                     editor.putString("password", pass);
                                     editor.putFloat("calorie", (float) calorierec);
+                                    editor.putFloat("threshold",(float)calThreshold);
                                     editor.putString("email", email);
                                     editor.commit();
 
