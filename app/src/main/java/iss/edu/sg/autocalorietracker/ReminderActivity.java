@@ -7,17 +7,31 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 
-public class ReminderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class ReminderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //variables for menu
     private DrawerLayout drawerLayout;
@@ -25,6 +39,8 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
     private Toolbar toolbar;
     private ImageView menuIcon;
     private Button save;
+    private TextInputEditText kcal;
+    private String ROOT_URL;
 
 
     @Override
@@ -32,30 +48,121 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
 
+        SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        String useremail = sharedPref.getString("email", null);
+
+        retrieveUser(useremail);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         //hooks
-        drawerLayout =findViewById(R.id.drawer_layout);
-        navigationView =findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
+        kcal = findViewById(R.id.kcal);
         save = findViewById(R.id.save);
-        save.setOnClickListener(this);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String emailVal = useremail;
+                String kcalVal = kcal.getText().toString();
+                kcal.setText(kcalVal);
+                Person p = new Person(emailVal, kcalVal);
+                update(p);
+
+
+                Toast.makeText(ReminderActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        ROOT_URL = "http://" + getString(R.string.address) + ":8080/api/user/reminder";
+
 
         //tool bar
         setSupportActionBar(toolbar);
 
         //Navigation Drawer Menu
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationDrawer();
     }
 
+
+    private void retrieveUser(String useremail) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://10.0.2.2:8080/api/user/view?email=" + useremail;
+        System.out.println("url=" + url);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response is: " + response.toString());
+                        JSONObject result = null;
+
+                        try {
+                            result = new JSONObject(response);
+
+                            String kcalVal = result.getString("reminderCalories");
+                            kcal.setText(kcalVal);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+                Toast.makeText(ReminderActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+
+
+    private void update(Person p) {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        JSONObject object = new JSONObject();
+        try {
+            //input your API parameters
+            object.put("email", p.getEmail());
+            object.put("reminderCalories", p.getReminderKcal());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Enter the correct url for your api service site
+        String url = ROOT_URL;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("update successfully");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("update failed");
+
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+    }
+
     //set the drawer
     @Override
-    public void onBackPressed(){
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -66,13 +173,13 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
 
-        menuIcon.setOnClickListener(new View.OnClickListener(){
+        menuIcon.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(drawerLayout.isDrawerVisible(GravityCompat.START)){
+                if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
-                }else {
+                } else {
                     drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
@@ -82,8 +189,8 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
 
     //set the item in menu bar
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_home:
                 Intent intent0 = new Intent(this, MainActivity.class);
                 startActivity(intent0);
@@ -99,7 +206,7 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
             case R.id.nav_reminders:
                 break;
             case R.id.nav_share:
-                Toast.makeText(this,"Share",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_rate:
                 break;
@@ -113,11 +220,5 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = null;
-        Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
-        intent = new Intent(ReminderActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
+
 }
