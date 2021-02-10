@@ -213,6 +213,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     public void onResponse(JSONObject response) {
                         System.out.println("response successfully");
                         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                        intent.putExtra("new",true);
                         startActivity(intent);
                     }
                 }, new Response.ErrorListener() {

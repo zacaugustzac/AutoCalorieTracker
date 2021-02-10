@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private CheckBox remembercheck;
     private String ROOT_URL ;
     private String keywordpass="passTemp";
+    private boolean newuser;
 
 
 
@@ -66,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Intent in=getIntent();
         String email=in.getStringExtra("email");
+        newuser=in.getBooleanExtra("new",false);
         if(email!=null){
             emailfield.getEditText().setText(email);
         }
@@ -86,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.signIn:
                 String pass=passfield.getEditText().getText().toString();
-                submitLogin(em, pass);
+                submitLogin(em, pass,newuser);
                 break;
 
             case R.id.signUp:
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void submitLogin(String name, String password){
+    public void submitLogin(String name, String password,boolean newuser){
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         JSONObject object = new JSONObject();
         try {
@@ -165,6 +167,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.commit();
 
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("new",newuser);
                                     startActivity(intent);
                                 }
                             } catch (JSONException e) {

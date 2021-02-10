@@ -57,6 +57,7 @@ import java.net.URLConnection;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.TimeZone;
 import java.time.LocalDate;
@@ -83,10 +84,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
     private ImageView menuIcon;
     private Adapter mAdapter;
     private Adapter2 mAdapter2;
-    private Button remove;
     private TextView datenow;
     private TextView totalcalorie;
     private TextView remcalorie;
+    private TextView subtitlerecommendation;
 
 
 
@@ -107,14 +108,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         menuIcon = findViewById(R.id.menu);
-
+        subtitlerecommendation=findViewById(R.id.textView20);
         SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
         String useremail=sharedPref.getString("email",null);
-        Float curremainder=sharedPref.getFloat("calorie",0);
-
-
-        remcalorie.setText(curremainder+" Kcal left for today");
-        //private String useremail = "ZAC@GMAIL.COM";
 
         Intent intent=getIntent();
         Long currentDate=intent.getLongExtra("date",System.currentTimeMillis());
@@ -187,15 +183,20 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 Long id=a.getId();
                 deleteImage(id,position);
                 mItemList.remove(position);
-                double currentsum=Double.valueOf(totalcalorie.getText().toString());
-                currentsum=currentsum-Double.valueOf(a.getCalorie());
+                double currentsum=Double.parseDouble(totalcalorie.getText().toString());
+                currentsum=currentsum-Double.parseDouble(a.getCalorie());
                 totalcalorie.setText(""+currentsum);
-                double curremainder=Double.valueOf(remcalorie.getText().toString().split(" Kcal")[0]);
-                curremainder+=Double.valueOf(a.getCalorie().toString());
-                remcalorie.setText(curremainder+" Kcal left for today");
+                double curremainder=Double.parseDouble(remcalorie.getText().toString().split(" Kcal")[0]);
+                curremainder+=Double.parseDouble(a.getCalorie());
 
                 mAdapter.notifyItemRemoved(position);
-                showRecommendation(curremainder);
+                String currentdate=datenow.getText().toString();
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate now=LocalDate.parse(currentdate,format);
+
+                if(now.compareTo(LocalDate.now())==0){
+                    showRecommendation(curremainder);
+                }
 
             }
         });
@@ -299,6 +300,10 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         String url = ROOT_URL_recommend + remainder;
         System.out.println("url=" + url);
 
+        remcalorie.setText(remainder+" Kcal left for today");
+        remcalorie.setVisibility(View.VISIBLE);
+        subtitlerecommendation.setVisibility(View.VISIBLE);
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -351,8 +356,6 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
 
                             for (int x = 0; x < result.length(); x++) {
                                 JSONObject ans = result.getJSONObject(x);
-//                               String name=ans.getJSONObject("food").getString("name");
-//                               double calorie=ans.getJSONObject("food").getDouble("calorie");
                                 String name = ans.getString("foodName");
                                 Long id = ans.getLong("id");
                                 double calorie = ans.getDouble("calorie");
@@ -371,11 +374,12 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                         }
                         totalcalorie.setText("" + sum);
                         double remainder = threshold - sum;
-                        remcalorie.setText(remainder + " Kcal left for today");
 
-                        showRecommendation(remainder);
-
-                        //Toast.makeText(HistoryActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+                        System.out.println(date);
+                        System.out.println(LocalDate.now());
+                        if(date.compareTo(LocalDate.now())==0){
+                            showRecommendation(remainder);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override

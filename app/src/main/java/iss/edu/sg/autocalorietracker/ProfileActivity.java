@@ -232,11 +232,11 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                                     bottomSheetDialog2.dismiss();
                                     break;
                                 case R.id.radio2:
-                                    activity.setText("Lightly");
+                                    activity.setText("Moderate");
                                     bottomSheetDialog2.dismiss();
                                     break;
                                 case R.id.radio3:
-                                    activity.setText("Moderately");
+                                    activity.setText("Active");
                                     bottomSheetDialog2.dismiss();
                                     break;
                             }

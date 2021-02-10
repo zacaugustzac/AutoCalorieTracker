@@ -2,12 +2,14 @@ package iss.edu.sg.autocalorietracker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -26,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.components.Legend;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
@@ -90,6 +93,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         URL_RETRIEVEUSER="http://" + getString(R.string.address) + ":8080/weekly/getUser?email=";
         URL_RETRIEVECALORIE="http://" + getString(R.string.address) + ":8080/weekly/getDailyCalories?date=";
+
+        Intent in=getIntent();
+        boolean newuser=in.getBooleanExtra("new",false);
+        if(newuser){
+
+            AlertDialog.Builder dlg= new AlertDialog.Builder(this)
+                    .setTitle("Suggestion")
+                    .setMessage("Would you like to update your profile to make the recommended calories calculation more precise?")
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("yes!", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent= new Intent(MainActivity.this,ProfileActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton("maybe later", null)
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+                    dlg.show();
+        }
 
 
         //get data from db and draw chart
@@ -166,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        calorieHistory.clear();
                         System.out.println("Response is: "+ response);
                         String res = response.substring(1,response.length()-1);
                         String str[] = res.split(",");
@@ -348,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         chart.setComboLineColumnChartData(data);
 
+
         chart.setMaximumViewport(v);
         chart.setCurrentViewport(v);
         chart.setViewportCalculationEnabled(false);
@@ -370,6 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             line.setHasLines(true);
             line.setHasPoints(false);
             lines.add(line);
+
         }
 
         //Recommended Line

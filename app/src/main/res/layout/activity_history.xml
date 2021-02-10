@@ -139,6 +139,7 @@
                         android:fontFamily="@font/baloo"
                         android:text="522 Kcal left for today"
                         android:textSize="20dp"
+                        android:visibility="invisible"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
@@ -150,6 +151,7 @@
                         android:fontFamily="@font/archivo_narrow_bold"
                         android:text="Recommendation for remaining calories"
                         android:textSize="15dp"
+                        android:visibility="invisible"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
