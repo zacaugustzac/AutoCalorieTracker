@@ -363,7 +363,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                                 threshold = ans.getJSONObject("dailyHistory").getJSONObject("user").getDouble("recommendedCalories");
                                 Long time = ans.getLong("epochDateUpload");
                                 Date date = new Date(time);
-                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                DateFormat format = new SimpleDateFormat("HH:mm:ss");
                                 format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
                                 String formatted = format.format(date);
                                 mItemList.add(new Item(id, ans.getString("url"), name, "" + calorie, formatted));
