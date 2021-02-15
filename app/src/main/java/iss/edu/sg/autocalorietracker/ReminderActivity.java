@@ -213,12 +213,6 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
                 break;
             case R.id.nav_reminders:
                 break;
-            case R.id.nav_share:
-                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_rate:
-                break;
-
             case R.id.nav_logout:
                 Intent intent3 = new Intent(this, FlashActivity.class);
                 startActivity(intent3);

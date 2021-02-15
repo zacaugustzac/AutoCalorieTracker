@@ -14,6 +14,9 @@ public class Item implements Serializable {
     private String calorie;
     private String timestamp;
 
+
+
+
     public Item(Long id,String image, String name, String calorie, String timestamp) {
         this.id=id;
         this.image = image;
@@ -57,4 +60,6 @@ public class Item implements Serializable {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+
 }

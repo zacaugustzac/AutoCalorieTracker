@@ -405,11 +405,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 Intent intent2 = new Intent(this, ReminderActivity.class);
                 startActivity(intent2);
                 break;
-            case R.id.nav_share:
-                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_rate:
-                break;
             case R.id.nav_logout:
                 Intent intent4 = new Intent(this, FlashActivity.class);
                 startActivity(intent4);
