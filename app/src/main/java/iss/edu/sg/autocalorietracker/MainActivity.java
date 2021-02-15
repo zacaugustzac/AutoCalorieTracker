@@ -172,13 +172,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(MainActivity.this,"User Retrieved successfully "+ userRecommendedCalories,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this,"User Retrieved successfully "+ userRecommendedCalories,Toast.LENGTH_SHORT).show();
                     }
                 },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
-                Toast.makeText(MainActivity.this, "User Something wrong happens", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Something wrong happens(User)", Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(stringRequest);
@@ -204,13 +204,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         editor.putFloat("totalIntake", Float.valueOf(str[str.length-1]));
                         editor.commit();
                         drawComboChart();
-                        Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this,"Retrieved successfully",Toast.LENGTH_SHORT).show();
                     }
                 },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error.getMessage());
-                Toast.makeText(MainActivity.this, "Something wrong happens", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Something wrong happens(Calories)", Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(stringRequest);
