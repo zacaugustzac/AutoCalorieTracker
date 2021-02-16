@@ -55,34 +55,32 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private Toolbar toolbar;
     private ImageView menuIcon;
+    private LocalDate today;
+    private LocalDate tomorrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-        ROOT_URL_plan = "http://" + getString(R.string.address) + ":8080/api/user/viewToday?email=";
 
+        ROOT_URL_plan = "http://" + getString(R.string.address) + ":8080/plan/showTodayPlanAndroid?email=";
 
+//        todayKcal = findViewById(R.id.todayKcal);
+//        tmrKcal = findViewById(R.id.tmrKcal);
+
+        //get today date, tml date and email
+        today = LocalDate.now();
         datenow = findViewById(R.id.todayDate);
-
-        //set tmr date
+        datenow.setText("" + today  + "(Today)");
+        tomorrow = LocalDate.now().plusDays(1);
+        datetmr = findViewById(R.id.tmrDate);
         Calendar cal1 = new GregorianCalendar();
         cal1.add(Calendar.DATE, 1);
-
-        datetmr = findViewById(R.id.tmrDate);
         datetmr.setText(new SimpleDateFormat("yyyy/MM/dd").format(cal1.getTime()) + "(Tomorrow)");
 
-        todayKcal = findViewById(R.id.todayKcal);
-        tmrKcal = findViewById(R.id.tmrKcal);
         SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String useremail = sharedPref.getString("email", null);
-
-        //set today
-        Intent intent = getIntent();
-        Long currentDate = intent.getLongExtra("date", System.currentTimeMillis());
-        LocalDate date = Instant.ofEpochMilli(currentDate).atZone(ZoneId.systemDefault()).toLocalDate();
-        datenow.setText("" + date  + "(Today)");
 
         //hooks
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -102,7 +100,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         System.out.println("it is calling create item list");
         buildRecyclerView();
 
-        retrieveItemList(date, useremail);
+        retrieveItemList(today, useremail);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -112,7 +110,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     private void retrieveItemList(LocalDate date, String email) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = ROOT_URL_plan + email + "&date=" + date;
-        System.out.println("url=" + url);
+//        System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -122,14 +120,15 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                         JSONArray result = null;
                         try {
                             result = new JSONArray(response);
-                            mItemList2.clear();
-                            for (int x = 0; x < 4; x++) {
-                                JSONObject ans = result.getJSONObject(x);
-                                String name = ans.getString("foodName");
-                                String url = ans.getString("url");
-                                double calorie = ans.getDouble("calorie");
-                                mItemList.add(new Item(url, name, "" + calorie));
-                            }
+                            datenow.setText(response);
+//                            mItemList2.clear();
+//                            for (int x = 0; x < 4; x++) {
+//                                JSONObject ans = result.getJSONObject(x);
+//                                String name = ans.getString("foodName");
+//                                String url = ans.getString("url");
+//                                double calorie = ans.getDouble("calorie");
+//                                mItemList.add(new Item(url, name, "" + calorie));
+//                            }
                             mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
