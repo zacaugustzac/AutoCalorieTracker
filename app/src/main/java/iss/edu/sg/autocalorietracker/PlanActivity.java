@@ -32,13 +32,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class PlanActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -63,11 +66,10 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-
         ROOT_URL_plan = "http://" + getString(R.string.address) + ":8080/plan/showTodayPlanAndroid?email=";
 
-//        todayKcal = findViewById(R.id.todayKcal);
-//        tmrKcal = findViewById(R.id.tmrKcal);
+        todayKcal = findViewById(R.id.todayKcal);
+        tmrKcal = findViewById(R.id.tmrKcal);
 
         //get today date, tml date and email
         today = LocalDate.now();
@@ -110,33 +112,40 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     private void retrieveItemList(LocalDate date, String email) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = ROOT_URL_plan + email + "&date=" + date;
-//        System.out.println("url=" + url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("Response is: " + response.toString());
-                        JSONArray result = null;
+                        JSONObject result = null;
                         try {
-                            result = new JSONArray(response);
-                            datenow.setText(response);
-//                            mItemList2.clear();
-//                            for (int x = 0; x < 4; x++) {
-//                                JSONObject ans = result.getJSONObject(x);
-//                                String name = ans.getString("foodName");
-//                                String url = ans.getString("url");
-//                                double calorie = ans.getDouble("calorie");
-//                                mItemList.add(new Item(url, name, "" + calorie));
-//                            }
+                            result = new JSONObject(response);
+                            //activity
+                            String activity = result.getString("activity");
+                            System.out.println("activity is: " + activity);
+
+                            //food
+                            JSONArray resultFoodImages = new JSONArray();
+                            resultFoodImages = result.getJSONArray("resultFoodImages");
+                            System.out.println("resultFoodImages is: " + resultFoodImages);
+                            for(int i = 0; i<resultFoodImages.length();i++){
+                                System.out.println("resultFoodImages get obj is: " + resultFoodImages.getJSONObject(i));
+                                String foodurl = resultFoodImages.getJSONObject(i).getString("url");
+                                String foodname = resultFoodImages.getJSONObject(i).getString("foodName");
+                                String foodcalorie = resultFoodImages.getJSONObject(i).getString("calorie");
+                                String fooddate = null;
+                                System.out.println("food1url is: " + foodurl);
+                                System.out.println("food1name is: " + foodname);
+                                System.out.println("food1calorie is: " + foodcalorie);
+                                mItemList.add(new Item((long)1, foodurl, foodname, "" + foodcalorie, fooddate));
+                            }
                             mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                         Toast.makeText(PlanActivity.this, "retrieved successfully", Toast.LENGTH_SHORT).show();
                     }
-
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

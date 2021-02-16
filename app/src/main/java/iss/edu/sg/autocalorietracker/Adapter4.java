@@ -57,19 +57,10 @@ public class Adapter4 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount(){
         return 0;
 //        return mItemList.size() + mItemList2.size();
-    }
-
-    @Override
-    public int getItemViewType(int position){
-        if(position < mItemList.size()){
-            return VIEW_TYPE_FOOD;
-        }
-
-        if(position - mItemList.size() < mItemList2.size()){
-            return VIEW_TYPE_ACTIVITY;
-        }
-
-        return -1;
+//            return mItemList.size();
+//        try {
+//            return mItemList.size();
+//        } catch (Exception ex){return 0;}
     }
 
     public class FoodViewHolder extends RecyclerView.ViewHolder {
