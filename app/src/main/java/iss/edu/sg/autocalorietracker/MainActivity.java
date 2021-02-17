@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences sharedPref=getSharedPreferences("user_data", Context.MODE_PRIVATE);
         useremail=sharedPref.getString("email",null);
 
-        URL_RETRIEVEUSER="http://" + getString(R.string.address) + ":8080/weekly/getUser?email=";
-        URL_RETRIEVECALORIE="http://" + getString(R.string.address) + ":8080/weekly/getDailyCalories?date=";
+        URL_RETRIEVEUSER= getString(R.string.address) + "/weekly/getUser?email=";
+        URL_RETRIEVECALORIE= getString(R.string.address) + "/weekly/getDailyCalories?date=";
 
         Intent in=getIntent();
         boolean newuser=in.getBooleanExtra("new",false);

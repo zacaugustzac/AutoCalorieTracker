@@ -27,7 +27,7 @@ public class EmailActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
-        ROOT_URL = "http://"+getString(R.string.address)+":8080/api/user/reset?email=";
+        ROOT_URL = getString(R.string.address)+"/api/user/reset?email=";
         //TODO implement the backend part
         Intent intent=getIntent();
         String email=intent.getStringExtra("email");

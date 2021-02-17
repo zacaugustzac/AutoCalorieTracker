@@ -49,8 +49,8 @@ public class ReminderActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
 
-        RetrieveURL="http://"+getString(R.string.address)+":8080/api/user/view?email=";
-        UPDATE_ROOT_URL = "http://" + getString(R.string.address) + ":8080/api/user/reminder";
+        RetrieveURL=getString(R.string.address)+"/api/user/view?email=";
+        UPDATE_ROOT_URL =  getString(R.string.address) + "/api/user/reminder";
 
         SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String useremail = sharedPref.getString("email", null);

@@ -32,7 +32,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-        ROOT_URL="http://"+getString(R.string.address)+":8080/api/user/resetPass";
+        ROOT_URL=getString(R.string.address)+"/api/user/resetPass";
         Intent intent=getIntent();
         String email=intent.getStringExtra("email");
 

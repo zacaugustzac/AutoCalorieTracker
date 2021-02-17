@@ -96,9 +96,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        ROOT_URL_delete = "http://"+getString(R.string.address)+":8080/history/deleteImage/";
-        ROOT_URL_recommend = "http://"+getString(R.string.address)+":8080/api/food/getSuggestion?remainder=";
-        ROOT_URL_history = "http://"+getString(R.string.address)+":8080/history/getTodayHistory?date=";
+        ROOT_URL_delete = getString(R.string.address)+"/history/deleteImage/";
+        ROOT_URL_recommend = getString(R.string.address)+"/api/food/getSuggestion?remainder=";
+        ROOT_URL_history = getString(R.string.address)+"/history/getTodayHistory?date=";
 
         datenow = findViewById(R.id.editDate);
         datenow.setText("" + LocalDate.now());
@@ -151,7 +151,7 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 String address = getString(R.string.address);
-                String imageurl=a.getImage().replace("localhost:8080",address+":8080");
+                String imageurl=a.getImage().replace("http://localhost:8080",address);
                 File img=downloadSharedImage(imageurl);
 
                 Uri picUri= FileProvider.getUriForFile(HistoryActivity.this,"iss.edu.sg.autocalorietracker",img);

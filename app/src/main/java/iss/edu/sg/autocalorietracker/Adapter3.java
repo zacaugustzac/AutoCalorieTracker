@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
@@ -17,11 +16,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
+public class Adapter3 extends RecyclerView.Adapter<Adapter3.ViewHolder> {
     private ArrayList<Item> mItemList2;
     Context con;
 
-    public Adapter2(ArrayList<Item> exampleList, Context con) {
+    public Adapter3(ArrayList<Item> exampleList,Context con) {
         mItemList2 = exampleList;
         this.con=con;
     }
@@ -37,12 +36,13 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
             name = itemView.findViewById(R.id.catalogue);
             image = itemView.findViewById(R.id.img);
             calorie = itemView.findViewById(R.id.kcal);
+
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.suggestionsitem, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.planitem, parent, false);
         ViewHolder evh = new ViewHolder(v);
         return evh;
     }
