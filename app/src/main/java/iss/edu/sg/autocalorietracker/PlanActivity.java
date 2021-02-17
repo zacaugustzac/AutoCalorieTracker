@@ -58,7 +58,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private ImageView menuIcon;
+    private ImageView menuIcon,todayactivity,tomorrowactivity;
     private LocalDate today;
     private LocalDate tomorrow;
     private Map <String,Integer> imgmap= new HashMap<String,Integer>();
@@ -89,6 +89,9 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         Calendar cal1 = new GregorianCalendar();
         cal1.add(Calendar.DATE, 1);
         datetmr.setText(new SimpleDateFormat("yyyy/MM/dd").format(cal1.getTime()) + "(Tomorrow)");
+
+        todayactivity=findViewById(R.id.img);
+        tomorrowactivity=findViewById(R.id.img1);
 
         SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
         String useremail = sharedPref.getString("email", null);
@@ -179,6 +182,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                     activityKcal.setText(burntcalorie);
                                     sumtoday-=Double.valueOf(burntcalorie);
                                 todayKcal.setText(""+sumtoday);
+                            todayactivity.setBackgroundResource(imgmap.get(activityname));
 
 
                                     mAdapter.notifyDataSetChanged();
@@ -213,6 +217,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                     activityKcal1.setText(burntcalorie1);
                                 sumtomorrow-=Double.valueOf(burntcalorie1);
                                 tmrKcal.setText(""+sumtomorrow);
+                            tomorrowactivity.setBackgroundResource(imgmap.get(activityname1));
                                 mAdapter2.notifyDataSetChanged();
 
                         } catch (JSONException e) {
