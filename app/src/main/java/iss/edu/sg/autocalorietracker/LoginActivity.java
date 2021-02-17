@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signUp = findViewById(R.id.signUp);
         setListeners();
 
-        ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/authenticate";
+        ROOT_URL= getString(R.string.address)+"/api/user/authenticate";
 
         emailfield=findViewById(R.id.email);
         passfield=findViewById(R.id.password);

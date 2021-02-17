@@ -85,7 +85,7 @@ public class CaptureActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
-        ROOT_URL = "http://"+getString(R.string.address)+":8080/api/image/predict";
+        ROOT_URL = getString(R.string.address)+"/api/image/predict";
 
         drawerLayout =findViewById(R.id.drawer_layout);
         drawerLayout =findViewById(R.id.drawer_layout);

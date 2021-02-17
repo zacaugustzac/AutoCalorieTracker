@@ -54,7 +54,7 @@ public class Adapter2 extends RecyclerView.Adapter<Adapter2.ViewHolder> {
         try {
             String imageurl=currentItem.getImage();
             String address = con.getString(R.string.address);
-            imageurl=imageurl.replace("localhost:8080",address+":8080");
+            imageurl=imageurl.replace("http://localhost:8080",address);
             url = new URL(imageurl);
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             holder.image.setImageBitmap(bmp);

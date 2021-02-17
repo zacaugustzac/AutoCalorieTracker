@@ -55,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         error=findViewById(R.id.errmessage);
 
-        ROOT_URL= "http://"+getString(R.string.address)+":8080/api/user/register";
+        ROOT_URL= getString(R.string.address)+"/api/user/register";
 
         w1 = findViewById(R.id.w1);
         w2 = findViewById(R.id.w2);

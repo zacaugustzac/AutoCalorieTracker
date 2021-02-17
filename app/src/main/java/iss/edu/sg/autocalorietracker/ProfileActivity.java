@@ -63,8 +63,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        UpdateURL="http://"+getString(R.string.address)+":8080/api/user/update";
-        RetrieveURL="http://"+getString(R.string.address)+":8080/api/user/view?email=";
+        UpdateURL=getString(R.string.address)+"/api/user/update";
+        RetrieveURL=getString(R.string.address)+"/api/user/view?email=";
         //hooks
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);

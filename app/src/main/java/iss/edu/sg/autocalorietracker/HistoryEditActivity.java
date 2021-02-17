@@ -36,11 +36,11 @@ public class HistoryEditActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Item item=(Item) intent.getSerializableExtra("item");
         foodPic =findViewById(R.id.imageView);
-        ROOT_URL= "http://"+getString(R.string.address)+":8080/history/updateImage?id=";
+        ROOT_URL= getString(R.string.address)+"/history/updateImage?id=";
         URL url = null;
         try {
             String address = getString(R.string.address);
-            url = new URL(item.getImage().replace("localhost:8080",address+":8080"));
+            url = new URL(item.getImage().replace("http://localhost:8080",address));
             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             foodPic.setImageBitmap(bmp);
         } catch (MalformedURLException e) {
