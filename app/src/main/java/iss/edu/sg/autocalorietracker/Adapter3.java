@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,32 +15,25 @@ public class Adapter3 extends RecyclerView.Adapter<Adapter3.ViewHolder> {
     final int VIEW_TYPE_FOOD = 0;
     final int VIEW_TYPE_ACTIVITY = 1;
 
+
     private ArrayList<Item> mItemList2;
-//    private ArrayList<Activity> mItemList2;
     Context con;
 
     public Adapter3(ArrayList<Item> mItemList2, Context con) {
         this.mItemList2 = mItemList2;
-//        this.mItemList2 = mItemList2;
         this.con = con;
     }
 
 
-//    public Adapter4(ArrayList<Item> mItemList, ArrayList<Activity> mItemList2, Context con) {
-//        this.mItemList = mItemList;
-//        this.mItemList2 = mItemList2;
-//        this.con = con;
-//    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-//        ImageView image;
+        ImageView image;
         TextView calorie;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.catalogue);
-//            image = itemView.findViewById(R.id.img);
+            image = itemView.findViewById(R.id.img);
             calorie = itemView.findViewById(R.id.kcal);
         }
     }
@@ -57,7 +51,7 @@ public class Adapter3 extends RecyclerView.Adapter<Adapter3.ViewHolder> {
     @Override
     public void onBindViewHolder(Adapter3.ViewHolder holder, int position) {
         Item currentItem = mItemList2.get(position);
-
+        holder.image.setImageResource(Integer.valueOf(currentItem.getImage()));
         holder.name.setText(currentItem.getName());
         holder.calorie.setText(currentItem.getCalorie());
 
