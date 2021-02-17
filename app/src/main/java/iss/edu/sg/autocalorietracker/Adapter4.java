@@ -55,8 +55,8 @@ public class Adapter4 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount(){
-        return 0;
-//        return mItemList.size() + mItemList2.size();
+//        return 0;
+        return mItemList.size() + mItemList2.size();
 //            return mItemList.size();
 //        try {
 //            return mItemList.size();
@@ -65,13 +65,13 @@ public class Adapter4 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class FoodViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        ImageView image;
+        //ImageView image;
         TextView calorie;
         public FoodViewHolder(View itemView){
             super(itemView);
 
             name = itemView.findViewById(R.id.catalogue);
-            image = itemView.findViewById(R.id.img);
+            //image = itemView.findViewById(R.id.img);
             calorie = itemView.findViewById(R.id.kcal);
         }
 
@@ -84,73 +84,24 @@ public class Adapter4 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class ActivityViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        ImageView image;
+        //ImageView image;
         TextView calorie;
 
         public ActivityViewHolder(View itemView){
             super(itemView);
 
             name = itemView.findViewById(R.id.catalogue);
-            image = itemView.findViewById(R.id.img);
+            //image = itemView.findViewById(R.id.img);
             calorie = itemView.findViewById(R.id.kcal);
         }
 
         public void populate(Activity activity){
             name.setText(activity.getActivityName());
-            image.setImageDrawable(activity.getActivityImg(R.drawable.cycling));
+            //image.setImageDrawable(activity.getActivityImg(R.drawable.cycling));
             calorie.setText(activity.getCalorieActivity());
         }
     }
 
-
-
-
-//    public static class ViewHolder extends RecyclerView.ViewHolder {
-//        TextView name;
-//        ImageView image;
-//        TextView calorie;
-//
-//        public ViewHolder(View itemView) {
-//            super(itemView);
-//            name = itemView.findViewById(R.id.catalogue);
-//            image = itemView.findViewById(R.id.img);
-//            calorie = itemView.findViewById(R.id.kcal);
-//        }
-//    }
-//
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.planitem, parent, false);
-//        ViewHolder evh = new ViewHolder(v);
-//        return evh;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(ViewHolder holder, int position) {
-//        Item currentItem = mItemList.get(position);
-//        URL url = null;
-//        try {
-//            String imageurl=currentItem.getImage();
-//            String address = con.getString(R.string.address);
-//            imageurl=imageurl.replace("localhost:8080",address+":8080");
-//            url = new URL(imageurl);
-//            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//            holder.image.setImageBitmap(bmp);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        holder.name.setText(currentItem.getName());
-//        holder.calorie.setText(currentItem.getCalorie());
-//
-//    }
-//    @Override
-//    public int getItemCount() {
-//        try {
-//            return mItemList.size()+1;
-//        } catch (Exception ex){return 0;}
-//    }
 }
 
 

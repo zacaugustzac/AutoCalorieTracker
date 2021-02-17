@@ -66,7 +66,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-        ROOT_URL_plan = "http://" + getString(R.string.address) + ":8080/plan/showTodayPlanAndroid?email=";
+        ROOT_URL_plan =getString(R.string.address) + "/plan/showPlanAndroid?email=";
 
         todayKcal = findViewById(R.id.todayKcal);
         tmrKcal = findViewById(R.id.tmrKcal);
@@ -118,29 +118,44 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onResponse(String response) {
                         System.out.println("Response is: " + response.toString());
-                        JSONObject result = null;
-                        try {
-                            result = new JSONObject(response);
-                            //activity
-                            String activity = result.getString("activity");
-                            System.out.println("activity is: " + activity);
+                        JSONArray resultall = null;
 
-                            //food
-                            JSONArray resultFoodImages = new JSONArray();
-                            resultFoodImages = result.getJSONArray("resultFoodImages");
-                            System.out.println("resultFoodImages is: " + resultFoodImages);
-                            for(int i = 0; i<resultFoodImages.length();i++){
-                                System.out.println("resultFoodImages get obj is: " + resultFoodImages.getJSONObject(i));
-                                String foodurl = resultFoodImages.getJSONObject(i).getString("url");
-                                String foodname = resultFoodImages.getJSONObject(i).getString("foodName");
-                                String foodcalorie = resultFoodImages.getJSONObject(i).getString("calorie");
-                                String fooddate = null;
-                                System.out.println("food1url is: " + foodurl);
-                                System.out.println("food1name is: " + foodname);
-                                System.out.println("food1calorie is: " + foodcalorie);
-                                mItemList.add(new Item((long)1, foodurl, foodname, "" + foodcalorie, fooddate));
+                        try {
+                            resultall = new JSONArray(response);
+                            for(int y=0;y<2;y++){
+                                mItemList.clear();
+                                mItemList2.clear();
+                                JSONObject resultnow=resultall.getJSONObject(y);
+                                System.out.println("index="+y);
+                                //activity today
+                                String activityname = resultnow.getJSONObject("activity").getString("activityName");
+                                String activityid = resultnow.getJSONObject("activity").get("id").toString();
+                                String burntcalorie=resultnow.getJSONObject("activity").get("caloriesBurnt").toString();
+
+                                //food
+                                JSONArray resultFoodImages = new JSONArray();
+                                resultFoodImages = resultnow.getJSONArray("food");
+                                //System.out.println("resultFoodImages is: " + resultFoodImages);
+                                for(int i = 0; i<resultFoodImages.length();i++){
+                                    System.out.println("resultFoodImages get obj is: " + resultFoodImages.getJSONObject(i));
+                                    String foodname = resultFoodImages.getJSONObject(i).getString("name");
+                                    String foodcalorie = resultFoodImages.getJSONObject(i).getString("calorie");
+                                    String fooddate = null;
+                                    System.out.println("food1name is: " + foodname);
+                                    System.out.println("food1calorie is: " + foodcalorie);
+                                    mItemList.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+                                    //image url and timestamp is not exist
+                                }
+                                mItemList2.add(new Activity(Long.parseLong(activityid),activityname,burntcalorie));
+                                if(y==0){
+                                    mAdapter.notifyDataSetChanged();
+                                }else{
+                                    mAdapter2.notifyDataSetChanged();
+                                }
+
                             }
-                            mAdapter.notifyDataSetChanged();
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -159,19 +174,24 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     //build the recyclerview
     private void buildRecyclerView() {
         mItemList = new ArrayList<>();
+        mItemList2 = new ArrayList<>();
         mRecyclerView = findViewById(R.id.GridView);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new Adapter4(mItemList, mItemList2, this);
+        System.out.println("todayfood size="+mItemList.size());
+        System.out.println("todayactivity size="+mItemList2.size());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
+        mItemList = new ArrayList<>();
         mItemList2 = new ArrayList<>();
         mRecyclerView2 = findViewById(R.id.GridView2);
         mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView2.setHasFixedSize(true);
         mAdapter2 = new Adapter4(mItemList, mItemList2, this);
+        System.out.println("tomorrowfood size="+mItemList.size());
+        System.out.println("tomorrowactivity size="+mItemList2.size());
         mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setAdapter(mAdapter2);
     }

@@ -4,13 +4,20 @@ import android.graphics.drawable.Drawable;
 
 public class Activity {
     private Long id;
-    private Drawable activityImg;
+    //private Drawable activityImg;
     private String activityName;
     private String calorieActivity;
 
-    public Activity(Long id, Drawable activityImg, String activityName, String calorieActivity) {
+//    public Activity(Long id, Drawable activityImg, String activityName, String calorieActivity) {
+//        this.id = id;
+//       // this.activityImg = activityImg;
+//        this.activityName = activityName;
+//        this.calorieActivity = calorieActivity;
+//    }
+
+    public Activity(Long id, String activityName, String calorieActivity) {
         this.id = id;
-        this.activityImg = activityImg;
+        // this.activityImg = activityImg;
         this.activityName = activityName;
         this.calorieActivity = calorieActivity;
     }
@@ -19,9 +26,9 @@ public class Activity {
         return id;
     }
 
-    public Drawable getActivityImg(int cycling) {
-        return activityImg;
-    }
+    //public Drawable getActivityImg(int cycling) {
+        //return activityImg;
+    //}
 
     public String getActivityName() {
         return activityName;

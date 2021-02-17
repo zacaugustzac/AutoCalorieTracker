@@ -3,9 +3,9 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="address">https://autocalorietrackerapp.azurewebsites.net</string>
+    <!--string name="address">https://autocalorietrackerapp.azurewebsites.net</string-->
     <!--string name="address">http://192.168.10.141:8080</string-->
-    <!--string name="address">http://10.0.2.2:8080</string-->
+    <string name="address">http://10.0.2.2:8080</string>
 
     <string-array name="spinner_level">
         <item>SEDENTARY</item>
