@@ -1,34 +1,25 @@
 package iss.edu.sg.autocalorietracker;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-public class Adapter4 extends RecyclerView.Adapter<Adapter4.ViewHolder> {
+public class Adapter3 extends RecyclerView.Adapter<Adapter3.ViewHolder> {
     final int VIEW_TYPE_FOOD = 0;
     final int VIEW_TYPE_ACTIVITY = 1;
 
-    private ArrayList<Item> mItemList;
-    private ArrayList<Activity> mItemList2;
+    private ArrayList<Item> mItemList2;
+//    private ArrayList<Activity> mItemList2;
     Context con;
 
-    public Adapter4(ArrayList<Item> mItemList, Context con) {
-        this.mItemList = mItemList;
+    public Adapter3(ArrayList<Item> mItemList2, Context con) {
+        this.mItemList2 = mItemList2;
 //        this.mItemList2 = mItemList2;
         this.con = con;
     }
@@ -64,8 +55,8 @@ public class Adapter4 extends RecyclerView.Adapter<Adapter4.ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(Adapter4.ViewHolder holder, int position) {
-        Item currentItem = mItemList.get(position);
+    public void onBindViewHolder(Adapter3.ViewHolder holder, int position) {
+        Item currentItem = mItemList2.get(position);
 
         holder.name.setText(currentItem.getName());
         holder.calorie.setText(currentItem.getCalorie());
@@ -74,7 +65,7 @@ public class Adapter4 extends RecyclerView.Adapter<Adapter4.ViewHolder> {
     @Override
     public int getItemCount() {
         try {
-            return mItemList.size();
+            return mItemList2.size();
         } catch (Exception ex){return 0;}
     }
 

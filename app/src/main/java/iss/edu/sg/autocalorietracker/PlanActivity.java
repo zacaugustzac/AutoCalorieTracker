@@ -47,12 +47,11 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
     private RecyclerView mRecyclerView, mRecyclerView2;
     private RecyclerView.LayoutManager mLayoutManager, mLayoutManager2;
-    private ArrayList<Item> mItemList;
-    private ArrayList<Activity> mItemList2;
+    private ArrayList<Item> mItemList,mItemList2;
     private String ROOT_URL_plan;
-    private Adapter4 mAdapter;
+    private Adapter3 mAdapter;
     private Adapter4 mAdapter2;
-    private TextView datenow, datetmr, todayKcal, tmrKcal;
+    private TextView datenow, datetmr, todayKcal, tmrKcal,activityCatalogue,activityKcal,activityCatalogue1,activityKcal1;
     //variables for menu
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -70,6 +69,13 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
         todayKcal = findViewById(R.id.todayKcal);
         tmrKcal = findViewById(R.id.tmrKcal);
+
+        activityCatalogue =findViewById(R.id.activityCatalogue);
+        activityKcal =findViewById(R.id.activityKcal);
+        activityCatalogue1 =findViewById(R.id.activityCatalogue1);
+        activityKcal1 =findViewById(R.id.activityKcal1);
+        mRecyclerView = findViewById(R.id.GridView);
+        mRecyclerView2 = findViewById(R.id.GridView2);
 
         //get today date, tml date and email
         today = LocalDate.now();
@@ -122,15 +128,16 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
 
                         try {
                             resultall = new JSONArray(response);
-                            for(int y=0;y<2;y++){
+
                                 mItemList.clear();
-                                mItemList2.clear();
-                                JSONObject resultnow=resultall.getJSONObject(y);
-                                System.out.println("index="+y);
+//                                mItemList2.clear();
+                                JSONObject resultnow=resultall.getJSONObject(0);
+                                //System.out.println("index="+y);
                                 //activity today
                                 String activityname = resultnow.getJSONObject("activity").getString("activityName");
                                 String activityid = resultnow.getJSONObject("activity").get("id").toString();
                                 String burntcalorie=resultnow.getJSONObject("activity").get("caloriesBurnt").toString();
+                                System.out.println("activity1name is: " + activityname);
 
                                 //food
                                 JSONArray resultFoodImages = new JSONArray();
@@ -143,17 +150,89 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                     String fooddate = null;
                                     System.out.println("food1name is: " + foodname);
                                     System.out.println("food1calorie is: " + foodcalorie);
-                                    mItemList.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+
+                                    //if(y==0){
+                                        mItemList.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+                                    //}
+                                    //else{
+                                        //mItemList2.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+                                    //}
+
                                     //image url and timestamp is not exist
                                 }
-                                mItemList2.add(new Activity(Long.parseLong(activityid),activityname,burntcalorie));
-                                if(y==0){
+
+//                                mItemList2.add(new Activity(Long.parseLong(activityid),activityname,burntcalorie));
+                                //if(y==0){
+                                    activityCatalogue.setText(activityname);
+                                    activityKcal.setText(burntcalorie);
+                                System.out.println("Food size"+mItemList.size());
+
                                     mAdapter.notifyDataSetChanged();
-                                }else{
-                                    mAdapter2.notifyDataSetChanged();
+//                                }else{
+//                                    activityCatalogue1.setText(activityname);
+//                                    activityKcal1.setText(burntcalorie);
+//                                    mAdapter2.notifyDataSetChanged();
+//                                }
+//                                    mAdapter.notifyDataSetChanged();
+//                                    mAdapter2.notifyDataSetChanged();
+//                                }
+
+
+
+
+
+
+
+
+//                            for(int y=1;y<2;y++){
+//                                mItemList.clear();
+                                mItemList2.clear();
+                                JSONObject resultnow1=resultall.getJSONObject(1);
+                                System.out.println("index="+1);
+                                //activity today
+                                String activityname1 = resultnow1.getJSONObject("activity").getString("activityName");
+//                                String activityid1 = resultnow.getJSONObject("activity").get("id").toString();
+                                String burntcalorie1=resultnow1.getJSONObject("activity").get("caloriesBurnt").toString();
+                                System.out.println("activity1name is: " + activityname);
+
+                                //food
+                                JSONArray resultFoodImages1 = new JSONArray();
+                                resultFoodImages1 = resultnow1.getJSONArray("food");
+                                //System.out.println("resultFoodImages is: " + resultFoodImages);
+                                for(int i = 0; i<resultFoodImages1.length();i++){
+                                    System.out.println("resultFoodImages get obj is: " + resultFoodImages1.getJSONObject(i));
+                                    String foodname = resultFoodImages1.getJSONObject(i).getString("name");
+                                    String foodcalorie = resultFoodImages1.getJSONObject(i).getString("calorie");
+                                    String fooddate = null;
+                                    System.out.println("food1name is: " + foodname);
+                                    System.out.println("food1calorie is: " + foodcalorie);
+//                                    if(y==0){
+//                                        mItemList.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+//                                    }
+//                                    else{
+                                        mItemList2.add(new Item((long)i, null, foodname, "" + foodcalorie, null));
+//                                    }
+
+                                    //image url and timestamp is not exist
                                 }
 
-                            }
+//                                mItemList2.add(new Activity(Long.parseLong(activityid),activityname,burntcalorie));
+//                                if(y==0){
+//                                    activityCatalogue.setText(activityname);
+//                                    activityKcal.setText(burntcalorie);
+//                                    System.out.println("Food size"+mItemList.size());
+
+//                                    mAdapter.notifyDataSetChanged();
+//                                }else{
+                                    activityCatalogue1.setText(activityname1);
+                                    activityKcal1.setText(burntcalorie1);
+                                    mAdapter2.notifyDataSetChanged();
+//                                }
+//                                    mAdapter.notifyDataSetChanged();
+//                                    mAdapter2.notifyDataSetChanged();
+//                                }
+
+//                            }
 
 
                         } catch (JSONException e) {
@@ -174,24 +253,26 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
     //build the recyclerview
     private void buildRecyclerView() {
         mItemList = new ArrayList<>();
-        mItemList2 = new ArrayList<>();
-        mRecyclerView = findViewById(R.id.GridView);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+//        mItemList2 = new ArrayList<>();
+
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new Adapter4(mItemList, mItemList2, this);
+//        mAdapter = new Adapter4(mItemList,this);
+        mAdapter = new Adapter3(mItemList, this);
         System.out.println("todayfood size="+mItemList.size());
-        System.out.println("todayactivity size="+mItemList2.size());
+//        System.out.println("todayactivity size="+mItemList2.size());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        mItemList = new ArrayList<>();
         mItemList2 = new ArrayList<>();
-        mRecyclerView2 = findViewById(R.id.GridView2);
-        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+//        mItemList2 = new ArrayList<>();
+
+        mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView2.setHasFixedSize(true);
-        mAdapter2 = new Adapter4(mItemList, mItemList2, this);
-        System.out.println("tomorrowfood size="+mItemList.size());
-        System.out.println("tomorrowactivity size="+mItemList2.size());
+        mAdapter2 = new Adapter4(mItemList2,this);
+//        mAdapter2 = new Adapter4(mItemList, mItemList2, this);
+        System.out.println("tomorrowfood size="+mItemList2.size());
+//        System.out.println("tomorrowactivity size="+mItemList2.size());
         mRecyclerView2.setLayoutManager(mLayoutManager2);
         mRecyclerView2.setAdapter(mAdapter2);
     }

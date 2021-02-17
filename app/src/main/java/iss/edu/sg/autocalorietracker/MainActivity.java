@@ -366,11 +366,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Axis axisX = new Axis(axisValuesForX);
         Axis axisY = new Axis(axisValuesForY);
 
+        axisX.setTextColor(R.color.black);// Set the X-axis text color
+        axisY.setTextColor(R.color.black);// Set the Y-axis text color
+
         data.setAxisXBottom(axisX);
         data.setAxisYLeft(axisY);
 
         chart.setComboLineColumnChartData(data);
-
 
         chart.setMaximumViewport(v);
         chart.setCurrentViewport(v);

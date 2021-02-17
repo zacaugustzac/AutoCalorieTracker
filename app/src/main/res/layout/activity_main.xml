@@ -72,15 +72,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="xx/xx/xx - Today"
-                android:textSize="15sp"
-                app:fontFamily="@font/baloo"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <lecho.lib.hellocharts.view.ComboLineColumnChartView
                 android:id="@+id/chart"
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginTop="8dp"
                 android:paddingLeft="10dp"
@@ -112,10 +111,10 @@
                 android:text="&lt; Last Week"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.056"
+                app:layout_constraintHorizontal_bias="0.061"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
-                app:layout_constraintVertical_bias="0.281" />
+                app:layout_constraintVertical_bias="0.701" />
 
             <Button
                 android:id="@+id/NextWeekButton"
@@ -124,60 +123,60 @@
                 android:text="Next Week &gt;"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.928"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.859"
+                app:layout_constraintStart_toEndOf="@+id/LastWeekButton"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
-                app:layout_constraintVertical_bias="0.281" />
+                app:layout_constraintVertical_bias="0.692" />
 
             <Button
                 android:id="@+id/Line1Button"
-                android:layout_width="50dp"
+                android:layout_width="30dp"
                 android:layout_height="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:backgroundTint="#a072b9"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textLine1"
-                app:layout_constraintHorizontal_bias="0.626"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.027" />
 
             <TextView
                 android:id="@+id/textLine1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="10dp"
                 android:text="Recommended Calories"
-                android:textSize="8sp"
-                app:fontFamily="@font/baloo"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.335"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/Line1Button"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/Line2Button"
-                android:layout_width="50dp"
+                android:layout_width="30dp"
                 android:layout_height="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="4dp"
                 android:backgroundTint="#42afd7"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textLine2"
-                app:layout_constraintHorizontal_bias="0.95"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.027" />
 
             <TextView
                 android:id="@+id/textLine2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="Average Calories"
-                android:textSize="8sp"
-                app:fontFamily="@font/baloo"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.9"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chart"
                 app:layout_constraintVertical_bias="0.0" />
 
