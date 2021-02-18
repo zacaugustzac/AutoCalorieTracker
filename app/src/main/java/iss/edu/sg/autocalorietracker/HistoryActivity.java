@@ -111,6 +111,9 @@ public class HistoryActivity extends AppCompatActivity implements NavigationView
         subtitlerecommendation=findViewById(R.id.textView20);
         SharedPreferences sharedPref=getSharedPreferences("user_data",Context.MODE_PRIVATE);
         String useremail=sharedPref.getString("email",null);
+        Float remainder=sharedPref.getFloat("calorie",2000);
+
+        remcalorie.setText(remainder+" Kcal left for today");
 
         Intent intent=getIntent();
         Long currentDate=intent.getLongExtra("date",System.currentTimeMillis());

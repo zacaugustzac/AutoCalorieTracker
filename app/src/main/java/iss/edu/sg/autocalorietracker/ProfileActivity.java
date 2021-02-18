@@ -58,6 +58,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private String UpdateURL;
     private String RetrieveURL;
 
+    String useremail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         gender = findViewById(R.id.gender);
 
         SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        String useremail = sharedPref.getString("email", null);
+        useremail = sharedPref.getString("email", null);
 
         retrieveUser(useremail);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -302,6 +304,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
                 case R.id.resetPassword:
                     Intent intent1 = new Intent(ProfileActivity.this, ResetPasswordActivity.class);
+                    intent1.putExtra("email",useremail);
                     startActivity(intent1);
 
                 case R.id.save:
