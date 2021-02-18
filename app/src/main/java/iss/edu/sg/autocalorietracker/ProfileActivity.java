@@ -134,6 +134,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                             height.setText(heightVal);
                             String weightVal = result.getString("weight");
                             weight.setText(weightVal);
+                            String activityVal = result.getString("activityLevel");
+                            activity.setText(activityVal);
 
 
                         } catch (JSONException e) {
