@@ -179,7 +179,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                 }
 
                                     activityCatalogue.setText(activityname);
-                                    activityKcal.setText(burntcalorie);
+                                    activityKcal.setText("-"+burntcalorie);
                                     sumtoday-=Double.valueOf(burntcalorie);
                                 todayKcal.setText(""+sumtoday);
                             todayactivity.setBackgroundResource(imgmap.get(activityname));
@@ -214,7 +214,7 @@ public class PlanActivity extends AppCompatActivity implements NavigationView.On
                                     //image url and timestamp is not exist
                                 }
                                     activityCatalogue1.setText(activityname1);
-                                    activityKcal1.setText(burntcalorie1);
+                                    activityKcal1.setText("-"+burntcalorie1);
                                 sumtomorrow-=Double.valueOf(burntcalorie1);
                                 tmrKcal.setText(""+sumtomorrow);
                             tomorrowactivity.setBackgroundResource(imgmap.get(activityname1));
